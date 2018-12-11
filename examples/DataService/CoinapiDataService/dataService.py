@@ -13,7 +13,7 @@ from vnpy.trader.vtObject import VtBarData
 from vnpy.trader.app.ctaStrategy.ctaBase import MINUTE_DB_NAME
 
 
-# 加载配置
+# loadConfiguration
 config = open('config.json')
 setting = json.load(config)
 
@@ -30,7 +30,7 @@ headers = {'X-CoinAPI-Key': APIKEY}
 
 #----------------------------------------------------------------------
 def generateVtBar(symbol, d):
-    """生成K线"""
+    """generateKLine"""
     l = symbol.split('_')
     bar = VtBarData()
     bar.symbol = l[-2] + l[-1]
@@ -49,7 +49,7 @@ def generateVtBar(symbol, d):
 
 #----------------------------------------------------------------------
 def downMinuteBarBySymbol(symbol, period, start, end):
-    """下载某一合约的分钟线数据"""
+    """Download minute line data for a contract"""
     startTime = time.time()
     
     cl = db[symbol]                                                 
@@ -68,7 +68,7 @@ def downMinuteBarBySymbol(symbol, period, start, end):
     resp = requests.get(url, headers=headers, params=params)
     
     if resp.status_code != 200:
-        print(u'%s数据下载失败' %symbol)
+        print(u'%s Data download failed' %symbol)
         return
     
     l = resp.json()
@@ -82,14 +82,14 @@ def downMinuteBarBySymbol(symbol, period, start, end):
     endTime = time.time()
     cost = (endTime - startTime) * 1000
 
-    print(u'合约%s数据下载完成%s - %s，耗时%s毫秒' %(symbol, l[0]['time_period_start'],
+    print(u'Contract %s data download completed %s - %s, time %s milliseconds' %(symbol, l[0]['time_period_start'],
                                                   l[-1]['time_period_end'], cost))
 
 #----------------------------------------------------------------------
 def downloadAllMinuteBar(start, end):
-    """下载所有配置中的合约的分钟线数据"""
+    """Download minute line data for contracts in all configurations"""
     print('-' * 50)
-    print(u'开始下载合约分钟线数据')
+    print(u'Start downloading contract minute line data')
     print('-' * 50)
     
     for symbol in SYMBOLS:
@@ -97,7 +97,7 @@ def downloadAllMinuteBar(start, end):
         time.sleep(1)
 
     print('-' * 50)
-    print(u'合约分钟线数据下载完成')
+    print(u'Contract minute line data download completed')
     print('-' * 50)
 
 

@@ -1,15 +1,15 @@
 # vn.femas
 
-### 简介
-飞马柜台API接口的Python封装。
+### summary
+The Python package of the Pegasus counter API interface.
 
-### 说明
-尽管和CTP接口很像，不少细节方面的处理是有区别的，在封装的过程中可以感觉到飞马的设计更为合理、性能相对也更高，建议实盘使用前充分测试。 
+###Description
+Although it is very similar to the CTP interface, there are many differences in the details of the processing. In the process of packaging, you can feel that the design of Pegasus is more reasonable and the performance is relatively higher. It is recommended to fully test before using the real disc.
 
-### API版本
+### API version
 
-日期：2015-08-26
+Date: 2015-08-26
 
-名称：FemasAPI_V1.01_P01_20150826
+Name: FemasAPI_V1.01_P01_20150826
 
-来源：飞马平台技术交流群（154929875）
+Source: Pegasus platform technology exchange group (154929875)

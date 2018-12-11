@@ -1,19 +1,19 @@
 # vn.lts
 
-### 简介
-华宝证券LTS柜台接口API的Python封装
+### Introduction
+Python package for Warburg Securities LTS counter interface API
 
-本套接口可以支持沪深证券交易所上市的几乎所有品种，包括：
-1. 股票
-2. 期权
-3. 债券
-4. 回购
+This set of interfaces can support almost all varieties listed on the Shanghai and Shenzhen stock exchanges, including:
+Stock
+2. Options
+Bond
+4. Repurchase
 
 
-### API版本
+### API version
 
-日期：2015-09-14
+Date: 2015-09-14
 
-名称：lts_traderapi_20150914认证版
+Name: lts_traderapi_20150914 certified version
 
-来源：华宝证券LTS服务群（181330073），只接受他们的实盘客户加群（500万开户）
+Source: Huabao Securities LTS Service Group (181330073), only accepting their real customers plus group (5 million account opening)

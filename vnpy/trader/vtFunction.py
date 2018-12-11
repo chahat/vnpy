@@ -77,9 +77,9 @@ jsonPathDict = {}
 #----------------------------------------------------------------------
 def getJsonPath(name, moduleFile):
     """
-    获取JSON配置文件的路径：
-    1. 优先从当前工作目录查找JSON文件
-    2. 若无法找到则前往模块所在目录查找
+    Get the path to the JSON configuration file:
+    1. Prioritize finding JSON files from the current working directory
+    2. If you can't find it, go to the directory where the module is located.
     """
     currentFolder = os.getcwd()
     currentJsonPath = os.path.join(currentFolder, name)

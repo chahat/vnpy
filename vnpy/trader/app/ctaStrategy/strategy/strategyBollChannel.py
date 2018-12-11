@@ -1,18 +1,18 @@
 # encoding: UTF-8
 
 """
-感谢Darwin Quant贡献的策略思路。
-知乎专栏原文：https://zhuanlan.zhihu.com/p/24448511
+Thanks to darwin quant for his strategic thinking.
+Know the original column: https://zhuanlan.zhihu.com/p/24448511
 
-策略逻辑：
-1. 布林通道（信号）
-2. CCI指标（过滤）
-3. ATR指标（止损）
+Strategy logic:
+1. Bollinger channel (signal)
+2. cci indicator (filtered)
+3. atr indicator (stop loss)
 
-适合品种：螺纹钢
-适合周期：15分钟
+Suitable variety: rebar
+Suitable period: 15 minutes
 
-这里的策略是作者根据原文结合vn.py实现，对策略实现上做了一些修改，仅供参考。
+The strategy here is that the author implements vn.py according to the original text, and made some modifications to the strategy implementation, for reference only.
 
 """
 
@@ -126,11 +126,11 @@ class BollChannelStrategy(CtaTemplate):
     
     #----------------------------------------------------------------------
     def onXminBar(self, bar):
-        """收到X分钟K线"""
-        # 全撤之前发出的委托
+        """ReceivedXMinutesKLine"""
+        # CommissionIssuedBeforeFullWithdrawal
         self.cancelAll()
     
-        # 保存K线数据
+        # SaveKLineData
         am = self.am
         
         am.updateBar(bar)
@@ -138,14 +138,14 @@ class BollChannelStrategy(CtaTemplate):
         if not am.inited:
             return
         
-        # 计算指标数值
+        # CalculateTheIndicatorValue
         self.bollUp, self.bollDown = am.boll(self.bollWindow, self.bollDev)
         self.cciValue = am.cci(self.cciWindow)
         self.atrValue = am.atr(self.atrWindow)
         
-        # 判断是否要进行交易
+        # DetermineIfYouWantToTrade
     
-        # 当前无仓位，发送开仓委托
+        # Currently no position, send open position commission
         if self.pos == 0:
             self.intraTradeHigh = bar.high
             self.intraTradeLow = bar.low            

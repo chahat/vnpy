@@ -1,7 +1,8 @@
 # encoding: UTF-8
 
 '''
-本文件中实现了CTA策略引擎，针对CTA类型的策略，抽象简化了部分底层接口的功能。
+The CTA policy engine is implemented in this document.
+For CTA type policies, abstraction simplifies the functions of some underlying interfaces.
 '''
 
 from __future__ import division
@@ -398,33 +399,33 @@ class CtaEngine(AppEngine):
     
     #----------------------------------------------------------------------
     def loadStrategy(self, setting):
-        """载入策略"""
+        """LoadingStrategy"""
         try:
             name = setting['name']
             className = setting['className']
         except Exception:
             msg = traceback.format_exc()
-            self.writeCtaLog(u'载入策略出错：%s' %msg)
+            self.writeCtaLog(u'ErrorLoadingStrategy：%s' %msg)
             return
         
-        # 获取策略类
+        # GetStrategyClass
         strategyClass = STRATEGY_CLASS.get(className, None)
         if not strategyClass:
-            self.writeCtaLog(u'找不到策略类：%s' %className)
+            self.writeCtaLog(u'StrategyClassNotFound：%s' %className)
             return
         
-        # 防止策略重名
+        # PreventStrategyName
         if name in self.strategyDict:
-            self.writeCtaLog(u'策略实例重名：%s' %name)
+            self.writeCtaLog(u'StrategyInstanceName：%s' %name)
         else:
-            # 创建策略实例
+            # CreateAStrategyInstance
             strategy = strategyClass(self, setting)  
             self.strategyDict[name] = strategy
             
-            # 创建委托号列表
+            # CreateAListOfDelegateNumbers
             self.strategyOrderDict[name] = set()
             
-            # 保存Tick映射关系
+            # SaveTickMappings
             if strategy.vtSymbol in self.tickStrategyDict:
                 l = self.tickStrategyDict[strategy.vtSymbol]
             else:
@@ -536,7 +537,7 @@ class CtaEngine(AppEngine):
     
     #----------------------------------------------------------------------
     def loadSetting(self):
-        """读取策略配置"""
+        """ReadPolicyConfiguration"""
         with open(self.settingFilePath) as f:
             l = json.load(f)
             
@@ -580,7 +581,7 @@ class CtaEngine(AppEngine):
         
     #----------------------------------------------------------------------
     def putStrategyEvent(self, name):
-        """触发策略状态变化事件（通常用于通知GUI更新）"""
+        """Trigger policy state change events (usually used to notify GUI updates)"""
         strategy = self.strategyDict[name]
         d = {k:strategy.__getattribute__(k) for k in strategy.varList}
         
@@ -592,8 +593,8 @@ class CtaEngine(AppEngine):
         d2['name'] = name
         event2 = Event(EVENT_CTA_STRATEGY)
         event2.dict_['data'] = d2
-        self.eventEngine.put(event2)        
-        
+        self.eventEngine.put(event2)
+
     #----------------------------------------------------------------------
     def callStrategyFunc(self, strategy, func, params=None):
         """调用策略的函数，若触发异常则捕捉"""

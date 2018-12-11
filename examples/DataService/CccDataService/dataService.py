@@ -13,7 +13,7 @@ from vnpy.trader.vtObject import VtBarData
 from vnpy.trader.app.ctaStrategy.ctaBase import MINUTE_DB_NAME
 
 
-# 加载配置
+# LoadConfiguration
 config = open('config.json')
 setting = json.load(config)
 
@@ -27,7 +27,7 @@ db = mc[MINUTE_DB_NAME]                                         # 数据库
 
 #----------------------------------------------------------------------
 def generateVtBar(vtSymbol, d):
-    """生成K线"""
+    """GenerateKLine"""
     bar = VtBarData()
     bar.vtSymbol = vtSymbol
     bar.symbol, bar.exchange = bar.vtSymbol.split('.')
@@ -46,7 +46,7 @@ def generateVtBar(vtSymbol, d):
 
 #----------------------------------------------------------------------
 def downloadMinuteBarBySymbol(vtSymbol, end):
-    """下载某一合约的分钟线数据"""
+    """DownloadMinuteLineDataForAContract"""
     end = datetime.datetime.strptime(end, '%Y%m%d')
     startTime = time.time()
     
@@ -66,7 +66,7 @@ def downloadMinuteBarBySymbol(vtSymbol, end):
     resp = requests.get(url, headers={}, params=params)
     
     if resp.status_code != 200:
-        print(u'%s数据下载失败' %vtSymbol)
+        print(u'%s DataDownloadFailed' %vtSymbol)
         return
     
     j = resp.json()
@@ -82,16 +82,16 @@ def downloadMinuteBarBySymbol(vtSymbol, end):
     cost = (endTime - startTime) * 1000
     
     
-    print(u'合约%s数据下载完成%s - %s，耗时%s毫秒' %(vtSymbol, 
+    print(u'Transaction %s DataDownloadCompleted %s - %s，TimeConsuming %s Millisecond' %(vtSymbol,
                                                     datetime.datetime.fromtimestamp(l[0]['time']),
                                                     datetime.datetime.fromtimestamp(l[-1]['time']), 
                                                     cost))
 
 #----------------------------------------------------------------------
 def downloadAllMinuteBar(end):
-    """下载所有配置中的合约的分钟线数据"""
+    """Download minute line data for contracts in all configurations"""
     print('-' * 50)
-    print(u'开始下载合约分钟线数据')
+    print(u'StartDownloadingContractMinuteLineData')
     print('-' * 50)
     
     for symbol in SYMBOLS:
@@ -99,7 +99,7 @@ def downloadAllMinuteBar(end):
         time.sleep(1)
 
     print('-' * 50)
-    print(u'合约分钟线数据下载完成')
+    print(u'ContractMinuteLineDataDownloadCompleted')
     print('-' * 50)
 
 

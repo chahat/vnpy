@@ -44,7 +44,7 @@ DEFAULT_POST_HEADERS = {
 
 #----------------------------------------------------------------------
 def createSign(params, method, host, path, secretKey):
-    """创建签名"""
+    """创建签名 EXCHANGE"""
     sortedParams = sorted(params.items(), key=lambda d: d[0], reverse=False)
     encodeParams = urllib.urlencode(sortedParams)
     

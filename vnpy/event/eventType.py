@@ -1,31 +1,31 @@
 # encoding: UTF-8
 
 '''
-本文件仅用于存放对于事件类型常量的定义。
+This file is only used to store definitions for event type constants.
 
-由于python中不存在真正的常量概念，因此选择使用全大写的变量名来代替常量。
-这里设计的命名规则以EVENT_前缀开头。
+Since there is no real constant concept in Python, choose to use all-capital variable names instead of constants.
+The naming conventions designed here begin with the EVENT_ prefix.
 
-常量的内容通常选择一个能够代表真实意义的字符串（便于理解）。
+The content of a constant usually selects a string that is representative of the real meaning (for easy understanding).
 
-建议将所有的常量定义放在该文件中，便于检查是否存在重复的现象。
+It is recommended that all constant definitions be placed in this file to make it easier to check for duplicates.
 '''
 from __future__ import print_function
 
 
-EVENT_TIMER = 'eTimer'                  # 计时器事件，每隔1秒发送一次
+EVENT_TIMER = 'eTimer'                  # Timer event, sent every 1 second
  
 
 
 #----------------------------------------------------------------------
 def test():
-    """检查是否存在内容重复的常量定义"""
+    """Check if there is a constant definition of content duplicates"""
     check_dict = {}
     
     global_dict = globals()    
     
     for key, value in global_dict.items():
-        if '__' not in key:                       # 不检查python内置对象
+        if '__' not in key:                       # Do not check python built-in objects
             if value in check_dict:
                 check_dict[value].append(key)
             else:
@@ -33,14 +33,14 @@ def test():
             
     for key, value in check_dict.items():
         if len(value)>1:
-            print(u'存在重复的常量定义:{}'.format(str(key)))
+            print(u'There are duplicate constant definitions:{}'.format(str(key)))
             for name in value:
                 print(name)
             print('')
         
-    print(u'测试完毕')
+    print(u'Test completed')
     
 
-# 直接运行脚本可以进行测试
+# Run the script directly to test
 if __name__ == '__main__':
     test()

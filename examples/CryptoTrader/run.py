@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-# 重载sys模块，设置默认字符串编码方式为utf8
+# Overload sys module, set the default string encoding mode to utf8
 try:
     reload         # Python 2
 except NameError:  # Python 3
@@ -9,37 +9,37 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-# vn.trader模块
+# vn.trader Module
 from vnpy.event import EventEngine
 from vnpy.trader.vtEngine import MainEngine
 from vnpy.trader.uiQt import createQApp
 
-# 加载底层接口
+# Load the underlying interface
 from vnpy.trader.gateway import (huobiGateway, okexGateway, okexfGateway,
                                  binanceGateway, bitfinexGateway,
                                  bitmexGateway, fcoinGateway,
                                  bigoneGateway, lbankGateway,
                                  coinbaseGateway, ccxtGateway)
 
-# 加载上层应用
+# Load the upper application
 from vnpy.trader.app import (algoTrading)
 
-# 当前目录组件
+# Current directory component
 from uiCryptoWindow import MainWindow
 
 #----------------------------------------------------------------------
 def main():
-    """主程序入口"""
-    # 创建Qt应用对象
+    """Main program entry"""
+    # Create a Qt application object
     qApp = createQApp()
 
-    # 创建事件引擎
+    # Create an event engine
     ee = EventEngine()
 
-    # 创建主引擎
+    # Create a main engine
     me = MainEngine(ee)
 
-    # 添加交易接口
+    # Add transaction interface
     me.addGateway(okexfGateway)
     me.addGateway(ccxtGateway)
     me.addGateway(coinbaseGateway)
@@ -52,14 +52,14 @@ def main():
     me.addGateway(binanceGateway)
     me.addGateway(bitfinexGateway)
     
-    # 添加上层应用
+    # Add upper application
     me.addApp(algoTrading)
     
-    # 创建主窗口
+    # Create main window
     mw = MainWindow(me, ee)
     mw.showMaximized()
 
-    # 在主线程中启动Qt事件循环
+    # Start the Qt event loop in the main thread
     sys.exit(qApp.exec_())
 
 

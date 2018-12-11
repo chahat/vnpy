@@ -1,13 +1,13 @@
-# DataService说明
+# DataService explanation
 
-* RqdataDataService：RQData数据服务（A股、期货、基金）
+* RqdataDataService：RQData Data services (A shares, futures, funds)
 
-* ShcifcoDataService：上海中期历史行情服务（期货）
+* ShcifcoDataService：Shanghai Mid-term Historical Quotes Service (Futures)
 
-* TqDataService：天勤历史行情服务（期货）
+* TqDataService：Tianqin historical market service (futures)
 
-* TushareDataService：TuShare历史行情服务（A股）
+* TushareDataService：TuShare Historical Quotes Service (A shares)
 
-* FutuDataService：富途证券历史行情服务（美股、港股）
+* FutuDataService：Futu Securities History Quotes Service (US stocks, Hong Kong stocks)
 
-* CoinapiDataService：CoinAPI.io历史行情服务（数字货币）
+* CoinapiDataService：CoinAPI.io Historical Quotes Service (Digital Currency)

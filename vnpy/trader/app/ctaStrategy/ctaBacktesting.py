@@ -1,8 +1,8 @@
 # encoding: UTF-8
 
 '''
-本文件中包含的是CTA模块的回测引擎，回测引擎的API和CTA引擎一致，
-可以使用和实盘相同的代码进行回测。
+This document contains the backtesting engine of the CTA module. The API of the backtesting engine is the same as the CTA engine.
+You can use the same code as the real disk for backtesting.
 '''
 from __future__ import division
 from __future__ import print_function
@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from vnpy.rpc import RpcClient, RpcServer, RemoteException
 
 
-# 如果安装了seaborn则设置为白色风格
+# Set to white style if seaborn is installed
 try:
     import seaborn as sns       
     sns.set_style('whitegrid')  
@@ -38,9 +38,9 @@ from .ctaBase import *
 ########################################################################
 class BacktestingEngine(object):
     """
-    CTA回测引擎
-    函数接口和策略引擎保持一样，
-    从而实现同一套代码从回测到实盘。
+    CTA backtest engine
+    The function interface remains the same as the policy engine.
+    Thus the same set of code from the backtest to the real disk.
     """
     
     TICK_MODE = 'tick'
@@ -828,21 +828,21 @@ class BacktestingEngine(object):
         
         # 输出
         self.output('-' * 30)
-        self.output(u'第一笔交易：\t%s' % d['timeList'][0])
-        self.output(u'最后一笔交易：\t%s' % d['timeList'][-1])
+        self.output(u'FirstTransaction：\t%s' % d['timeList'][0])
+        self.output(u'LastTransaction：\t%s' % d['timeList'][-1])
         
-        self.output(u'总交易次数：\t%s' % formatNumber(d['totalResult']))        
-        self.output(u'总盈亏：\t%s' % formatNumber(d['capital']))
-        self.output(u'最大回撤: \t%s' % formatNumber(min(d['drawdownList'])))                
+        self.output(u'TotalTransactions：\t%s' % formatNumber(d['totalResult']))
+        self.output(u'TotalProfitAndLoss：\t%s' % formatNumber(d['capital']))
+        self.output(u'MaximumWithdrawal: \t%s' % formatNumber(min(d['drawdownList'])))
         
-        self.output(u'平均每笔盈利：\t%s' %formatNumber(d['capital']/d['totalResult']))
-        self.output(u'平均每笔滑点：\t%s' %formatNumber(d['totalSlippage']/d['totalResult']))
-        self.output(u'平均每笔佣金：\t%s' %formatNumber(d['totalCommission']/d['totalResult']))
+        self.output(u'AverageProfitPerShare：\t%s' %formatNumber(d['capital']/d['totalResult']))
+        self.output(u'AverageSlippage：\t%s' %formatNumber(d['totalSlippage']/d['totalResult']))
+        self.output(u'AverageCommissionPerCommission：\t%s' %formatNumber(d['totalCommission']/d['totalResult']))
         
-        self.output(u'胜率\t\t%s%%' %formatNumber(d['winningRate']))
-        self.output(u'盈利交易平均值\t%s' %formatNumber(d['averageWinning']))
-        self.output(u'亏损交易平均值\t%s' %formatNumber(d['averageLosing']))
-        self.output(u'盈亏比：\t%s' %formatNumber(d['profitLossRatio']))
+        self.output(u'WinRate\t\t%s%%' %formatNumber(d['winningRate']))
+        self.output(u'AverageProfitability\t%s' %formatNumber(d['averageWinning']))
+        self.output(u'AverageLossTrading\t%s' %formatNumber(d['averageLosing']))
+        self.output(u'ProfitLossRatio：\t%s' %formatNumber(d['profitLossRatio']))
     
         # 绘图
         fig = plt.figure(figsize=(10, 16))

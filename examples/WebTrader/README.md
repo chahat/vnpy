@@ -1,36 +1,36 @@
-# WebTrader使用说明
+# WebTrader Instructions for use
 
-**开发作者：cccbbbaaab**
+**Development author：cccbbbaaab**
 
-## 使用步骤
+## Steps for usage
 
-1. 修改CTP_connect.json中的账号和服务器地址
-2. 修改WEB_setting.json中的网页登录用户名和密码
-3. 打开cmd，运行python run.py
-4. 浏览器将会自动打开，并访问http://127.0.0.1:5000/
-5. 输入2中的用户名和密码登录后，点击左下角的“连接CTP”
-6. 网页前端的使用方法和常规版本的VnTrader基本一致
-7. 如需运行CTA策略，请修改CTA_setting.json中的配置
+1. Modify the account and server address in CTP_connect.json
+2. Modify the web login username and password in WEB_setting.json
+3. Open cmd and run python run.py
+4. The browser will open automatically and visit http://127.0.0.1:5000/
+5. After entering the username and password in 2, click on “Connect CTP” in the lower left corner.
+6. The front end of the web page is basically the same as the regular version of VnTrader.
+7. To run the CTA policy, modify the configuration in CTA_setting.json
 
-## 文件功能
+## file function
 
-* tradingServer.py：基于vnpy.rpc模块实现的交易服务器，包含CTP接口和CTA策略模块
-* webServer.py：基于Flask实现的Web服务器，内部通过vnpy.rpc客户端来访问交易服务器
-* run.py: 无人值守服务
+* tradingServer.py: A transaction server based on the vnpy.rpc module, including CTP interface and CTA policy module
+* webServer.py: a web server based on Flask, which internally accesses the transaction server via the vnpy.rpc client
+* run.py: unattended service
 
-## 架构设计
+## Architecture Design
 
-* 基于Flask-Restful实现的主动函数调用功能，数据流程：
-	1. 用户点击浏览器中的某个按钮，发起Restful功能调用
-	2. Web服务器收到Restful请求，将其转化为RPC功能调用发送给交易服务器
-	3. 交易服务器收到RPC请求，执行具体的功能逻辑，并返回结果
-	4. Web服务器返回Restful请求的结果给浏览器
+* Active function call function based on Flask-Restful implementation, data flow:
+1. The user clicks on a button in the browser to initiate a Restful function call.
+2. The web server receives the Restful request and converts it into an RPC function call and sends it to the transaction server.
+3. The transaction server receives the RPC request, executes the specific function logic, and returns the result.
+4. The web server returns the result of the Restful request to the browser.
 
-* 基于Flask-Socketio实现的被动数据推送功能，数据流程：
-	1. 交易服务器的事件引擎转发某个事件推送，并推送给RPC客户端（Web服务器）
-	2. Web服务器收到事件推送后，将其转化为json格式，并通过Websocket发出
-	3. 浏览器通过Websocket收到推送的数据，并渲染在Web前端界面上
+* Passive data push function based on Flask-Socketio, data flow:
+1. The event engine of the transaction server forwards an event push and pushes it to the RPC client (web server)
+2. After receiving the event push, the web server converts it into json format and sends it through Websocket.
+3. The browser receives the pushed data through the Websocket and renders it on the web front end interface.
 
-* 将程序分为两个进程的主要原因包括：
-	1. 交易服务器中的策略运行和数据计算的运算压力较大，需要保证尽可能保证低延时效率
-	2. Web服务器需要面对互联网访问，将交易相关的逻辑剥离能更好保证安全性
+* The main reasons for dividing the program into two processes include:
+1. The calculation of policy operation and data calculation in the transaction server is relatively stressful, and it is necessary to ensure low latency efficiency as much as possible.
+2. Web server needs to face Internet access, and the transaction-related logic stripping can better ensure security.

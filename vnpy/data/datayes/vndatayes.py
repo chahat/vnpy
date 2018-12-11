@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-'''一个简单的通联数据客户端，主要使用requests开发，比通联官网的python例子更为简洁。'''
+'''A simple communication data client, mainly using requests development, is more concise than the Python example of Tonglian's official website.'''
 from __future__ import print_function
 
 import os

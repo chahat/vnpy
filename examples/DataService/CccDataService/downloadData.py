@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 """
-立即下载数据到数据库中，用于手动执行更新操作。
+Download data to the database now for manual update operations。
 """
 
 from dataService import *

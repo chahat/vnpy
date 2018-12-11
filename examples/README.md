@@ -2,22 +2,22 @@
 
 本文件夹中的内容主要是关于如何在交易业务中使用vn.py的示例
 
-* CryptoTrader：vn.crypto数字货币交易平台
+* CryptoTrader：vn.crypto Digital currency trading platform
 
-* VnTrader：最常用的vn.py图形交易系统
+* VnTrader：most commonly used vn.py Graphic trading system
 
-* OptionMaster: 期权量化交易系统
+* OptionMaster: Option quantitative trading system
 
-* WebTrader：使用Web前端作为监控的交易系统
+* WebTrader：use Web Front end as a monitored trading system
 
-* FutuTrader：针对富途证券futuquant的交易系统（只支持Python 3）
+* FutuTrader：For Futu Securities futuquant Trading system (only supports Python 3)
 
-* DataRecording：全自动行情记录工具（无需用户每日定时重启）
+* DataRecording：Fully automatic market record tool (no need for daily scheduled restart)
 
-* CtaTrading：无图形界面模式的CTA策略交易
+* CtaTrading：CTA strategy trading without graphical interface mode
 
-* CtaBacktesting：CTA策略的回测和优化
+* CtaBacktesting：CTA Backtesting and optimization of strategies
 
-* ServerClient：服务端（业务逻辑）和客户端（GUI界面）分离的VnTrader
+* ServerClient：Server (business logic) and client (GUI interface) separated VnTrader
 
-* DataService：用于下载历史行情数据以及每日数据自动更新的数据服务
+* DataService：Data service for downloading historical market data and automatic daily data updates

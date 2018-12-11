@@ -29,7 +29,7 @@ WEBSOCKET_HOST = 'wss://api.fcoin.com/v2/ws'
 
 ########################################################################
 class FcoinRestApi(object):
-    """REST API"""
+    """REST API EXCHANGE"""
 
     #----------------------------------------------------------------------
     def __init__(self):

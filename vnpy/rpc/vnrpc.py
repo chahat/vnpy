@@ -13,31 +13,31 @@ pDumps = cPickle.dumps
 pLoads = cPickle.loads
 
 
-# 实现Ctrl-c中断recv
+# implement CtrlC InterruptRecv
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 
 ########################################################################
 class RpcObject(object):
     """
-    RPC对象
+    RPC object
 
-    提供对数据的序列化打包和解包接口，目前提供了json、msgpack、cPickle三种工具。
+    Provide serialization and unpacking interface for data. Currently, there are three tools: json, msgpack, and cPickle.
 
-    msgpack：性能更高，但通常需要安装msgpack相关工具；
-    json：性能略低但通用性更好，大部分编程语言都内置了相关的库。
-    cPickle：性能一般且仅能用于Python，但是可以直接传送Python对象，非常方便。
+    Msgpack: higher performance, but usually requires the installation of msgpack related tools;
+    Json: Performance is slightly lower but versatile, and most programming languages ​​have built-in libraries.
+    cPickle: Performance is average and can only be used in Python, but it is very convenient to transfer Python objects directly.
 
-    因此建议尽量使用msgpack，如果要和某些语言通讯没有提供msgpack时再使用json，
-    当传送的数据包含很多自定义的Python对象时建议使用cPickle。
+    Therefore, it is recommended to use msgpack as much as possible. If you want to communicate with some languages ​​without using msgpack, then use json.
+    cPickle is recommended when the data being transferred contains many custom Python objects.
 
-    如果希望使用其他的序列化工具也可以在这里添加。
+    If you want to use other serialization tools you can also add them here.
     """
 
     #----------------------------------------------------------------------
     def __init__(self):
         """Constructor"""
-        # 默认使用msgpack作为序列化工具
+        # By default, msgpack is used as the serialization tool.
         #self.useMsgpack()
         self.usePickle()
 
@@ -109,51 +109,51 @@ class RpcServer(RpcObject):
         """Constructor"""
         super(RpcServer, self).__init__()
 
-        # 保存功能函数的字典，key是函数名，value是函数对象
+        # Save the dictionary of function functions, key is the function name, value is the function object
         self.__functions = {}
 
-        # zmq端口相关
+        # zmq PortRelated
         self.__context = zmq.Context()
 
-        self.__socketREP = self.__context.socket(zmq.REP)   # 请求回应socket
+        self.__socketREP = self.__context.socket(zmq.REP)   # requestResponse socket
         self.__socketREP.bind(repAddress)
 
-        self.__socketPUB = self.__context.socket(zmq.PUB)   # 数据广播socket
+        self.__socketPUB = self.__context.socket(zmq.PUB)   # DataBroadcast socket
         self.__socketPUB.bind(pubAddress)
 
-        # 工作线程相关
-        self.__active = False                             # 服务器的工作状态
-        self.__thread = threading.Thread(target=self.run) # 服务器的工作线程
+        # WorkThreadRelated
+        self.__active = False                             # ServerWorkingStatus
+        self.__thread = threading.Thread(target=self.run) # ServerWorkerThread
 
     #----------------------------------------------------------------------
     def start(self):
-        """启动服务器"""
-        # 将服务器设为启动
+        """startTheServer"""
+        # SetTheServerToStart
         self.__active = True
 
-        # 启动工作线程
+        # StartWorkerThread
         if not self.__thread.isAlive():
             self.__thread.start()
 
     #----------------------------------------------------------------------
     def stop(self, join=False):
-        """停止服务器"""
-        # 将服务器设为停止
+        """stopTheServer"""
+        # SetTheServerToStop
         self.__active = False
 
-        # 等待工作线程退出
+        # WaitingForTheWorkerThreadToExit
         if join and self.__thread.isAlive():
             self.__thread.join()
 
     #----------------------------------------------------------------------
     def run(self):
-        """服务器运行函数"""
+        """ServerRunFunction"""
         while self.__active:
-            # 使用poll来等待事件到达，等待1秒（1000毫秒）
+            # Use poll to wait for the event to arrive, wait 1 second (1000 milliseconds)
             if not self.__socketREP.poll(1000):
                 continue
 
-            # 从请求响应socket收取请求数据
+            # Retrieve request data from request response socket
             reqb = self.__socketREP.recv()
 
             # 序列化解包

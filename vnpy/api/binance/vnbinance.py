@@ -26,7 +26,7 @@ USERSTREAM_ENDPOINT = 'wss://stream.binance.com:9443/ws/'
 
 ########################################################################
 class BinanceApi(object):
-    """"""
+    """EXCHANGE"""
     
     ###################################################
     ## Basic Function

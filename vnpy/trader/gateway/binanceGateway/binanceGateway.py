@@ -15,7 +15,7 @@ from vnpy.trader.vtGateway import *
 from vnpy.trader.vtFunction import getJsonPath, getTempPath
 
 
-# 委托状态类型映射
+# DelegateStateTypeMapping
 statusMapReverse = {}
 statusMapReverse['NEW'] = STATUS_NOTTRADED
 statusMapReverse['PARTIALLY_FILLED'] = STATUS_PARTTRADED
@@ -24,13 +24,13 @@ statusMapReverse['CANCELED'] = STATUS_CANCELLED
 statusMapReverse['REJECTED'] = STATUS_REJECTED
 statusMapReverse['EXPIRED'] = STATUS_CANCELLED
 
-# 方向映射
+# DirectionMapping
 directionMap = {}
 directionMap[DIRECTION_LONG] = 'BUY'
 directionMap[DIRECTION_SHORT] = 'SELL'
 directionMapReverse = {v:k for k,v in directionMap.items()}
 
-# 价格类型映射
+# PriceTypeMapping
 priceTypeMap = {}
 priceTypeMap[PRICETYPE_LIMITPRICE] = 'LIMIT'
 priceTypeMap[PRICETYPE_MARKETPRICE] = 'MARKET'
@@ -50,7 +50,7 @@ def print_dict(d):
 
 ########################################################################
 class BinanceGateway(VtGateway):
-    """币安接口"""
+    """CurrencyInterface"""
 
     #----------------------------------------------------------------------
     def __init__(self, eventEngine, gatewayName=''):
@@ -59,24 +59,24 @@ class BinanceGateway(VtGateway):
 
         self.api = GatewayApi(self)
 
-        self.qryEnabled = False         # 是否要启动循环查询
+        self.qryEnabled = False         # Do you want to start a loop query?
 
         self.fileName = self.gatewayName + '_connect.json'
         self.filePath = getJsonPath(self.fileName, __file__)
 
     #----------------------------------------------------------------------
     def connect(self):
-        """连接"""
+        """Connection"""
         try:
             f = open(self.filePath)
         except IOError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'读取连接配置出错，请检查'
+            log.logContent = u'Error reading connection configuration, please check'
             self.onLog(log)
             return
 
-        # 解析json文件
+        # ParsingJsonFiles
         setting = json.load(f)
         f.close()
         try:
@@ -86,34 +86,34 @@ class BinanceGateway(VtGateway):
         except KeyError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'连接配置缺少字段，请检查'
+            log.logContent = u'Connection configuration missing field, please check'
             self.onLog(log)
             return
 
-        # 创建行情和交易接口对象
+        # CreateQuotesAndTradingInterfaceObjects
         self.api.connect(apiKey, secretKey, symbols)
 
-        # 初始化并启动查询
+        # InitializeAndStartTheQuery
         #self.initQuery()
 
     #----------------------------------------------------------------------
     def subscribe(self, subscribeReq):
-        """订阅行情"""
+        """SubscribeToTheMarket"""
         pass
 
     #----------------------------------------------------------------------
     def sendOrder(self, orderReq):
-        """发单"""
+        """Billing"""
         return self.api.sendOrder(orderReq)
 
     #----------------------------------------------------------------------
     def cancelOrder(self, cancelOrderReq):
-        """撤单"""
+        """Withdrawal"""
         self.api.cancel(cancelOrderReq)
 
     #----------------------------------------------------------------------
     def close(self):
-        """关闭"""
+        """close"""
         self.api.close()
     
     #----------------------------------------------------------------------
@@ -123,43 +123,43 @@ class BinanceGateway(VtGateway):
 
     #----------------------------------------------------------------------
     def initQuery(self):
-        """初始化连续查询"""
+        """InitializeContinuousQuery"""
         if self.qryEnabled:
-            # 需要循环的查询函数列表
+            # List of query functions that need to be looped
             self.qryFunctionList = [self.queryAccount]
 
-            self.qryCount = 0           # 查询触发倒计时
-            self.qryTrigger = 1         # 查询触发点
-            self.qryNextFunction = 0    # 上次运行的查询函数索引
+            self.qryCount = 0           # QueryTriggerCountdown
+            self.qryTrigger = 1         # QueryTriggerPoint
+            self.qryNextFunction = 0    # LastRunQueryFunctionIndex
 
             self.startQuery()
 
     #----------------------------------------------------------------------
     def query(self, event):
-        """注册到事件处理引擎上的查询函数"""
+        """Register to the query function on the event processing engine"""
         self.qryCount += 1
 
         if self.qryCount > self.qryTrigger:
-            # 清空倒计时
+            # EmptyCountdown
             self.qryCount = 0
 
-            # 执行查询函数
+            # ExecuteTheQueryFunction
             function = self.qryFunctionList[self.qryNextFunction]
             function()
 
-            # 计算下次查询函数的索引，如果超过了列表长度，则重新设为0
+            # Calculate the index of the next query function, if it exceeds the length of the list, reset it to 0
             self.qryNextFunction += 1
             if self.qryNextFunction == len(self.qryFunctionList):
                 self.qryNextFunction = 0
 
     #----------------------------------------------------------------------
     def startQuery(self):
-        """启动连续查询"""
+        """StartContinuousQuery"""
         self.eventEngine.register(EVENT_TIMER, self.query)
 
     #----------------------------------------------------------------------
     def setQryEnabled(self, qryEnabled):
-        """设置是否要启动循环查询"""
+        """SetWhetherYouWantToStartACircularQuery"""
         self.qryEnabled = qryEnabled
 
 
@@ -172,8 +172,8 @@ class GatewayApi(BinanceApi):
         """Constructor"""
         super(GatewayApi, self).__init__()
 
-        self.gateway = gateway                  # gateway对象
-        self.gatewayName = gateway.gatewayName  # gateway对象名称
+        self.gateway = gateway                  # gatewayObject
+        self.gatewayName = gateway.gatewayName  # gatewayObjectName
         
         self.date = datetime.now().strftime('%y%m%d%H%M%S')
         self.orderId = 0
@@ -182,10 +182,10 @@ class GatewayApi(BinanceApi):
 
     #----------------------------------------------------------------------
     def connect(self, apiKey, secretKey, symbols):
-        """连接服务器"""
+        """ConnectToTheServer"""
         self.init(apiKey, secretKey)
         self.start()
-        self.writeLog(u'交易API启动成功')
+        self.writeLog(u'TradingAPIStartedSuccessfully')
         
         l = []
         for symbol in symbols:
@@ -193,11 +193,11 @@ class GatewayApi(BinanceApi):
             l.append(symbol+'@ticker')
             l.append(symbol+'@depth5')
         self.initDataStream(l)
-        self.writeLog(u'行情推送订阅成功')
+        self.writeLog(u'QuotePushSubscriptionSuccess')
         
         self.startStream()
         
-        # 初始化查询
+        # InitializeTheQuery
         self.queryExchangeInfo()
         self.queryAccount()
         
@@ -206,7 +206,7 @@ class GatewayApi(BinanceApi):
 
     #----------------------------------------------------------------------
     def writeLog(self, content):
-        """发出日志"""
+        """IssueLog"""
         log = VtLogData()
         log.gatewayName = self.gatewayName
         log.logContent = content
@@ -306,17 +306,17 @@ class GatewayApi(BinanceApi):
         """"""
         key = data['listenKey']
         self.initUserStream(key)
-        self.writeLog(u'交易推送订阅成功')
+        self.writeLog(u'TransactionPushSubscriptionSuccess')
     
     #----------------------------------------------------------------------
     def onKeepaliveStream(self, data, reqid):
         """"""
-        self.writeLog(u'交易推送刷新成功')
+        self.writeLog(u'TransactionPushRefreshedSuccessfully')
     
     #----------------------------------------------------------------------
     def onCloseStream(self, data, reqid):
         """"""
-        self.writeLog(u'交易推送关闭')            
+        self.writeLog(u'TransactionPushClose')
 
     #----------------------------------------------------------------------
     def onUserData(self, data):
@@ -346,7 +346,7 @@ class GatewayApi(BinanceApi):
     #----------------------------------------------------------------------
     def onPushOrder(self, d):
         """"""
-        # 委托更新
+        # CommissionUpdate
         order = VtOrderData()
         order.gatewayName = self.gatewayName
         
@@ -355,7 +355,7 @@ class GatewayApi(BinanceApi):
         order.vtSymbol = '.'.join([order.symbol, order.exchange])
         
         if d['C'] != 'null':
-            order.orderID = d['C']  # 撤单原始委托号
+            order.orderID = d['C']  # WithdrawalOriginalOrderNumber
         else:
             order.orderID = d['c']
         order.vtOrderID = '.'.join([order.gatewayName, order.orderID])
@@ -369,7 +369,7 @@ class GatewayApi(BinanceApi):
         
         self.gateway.onOrder(order)
         
-        # 成交更新
+        # TransactionUpdate
         if float(d['l']):
             trade = VtTradeData()
             trade.gatewayName = self.gatewayName
@@ -465,7 +465,7 @@ class GatewayApi(BinanceApi):
         
     #----------------------------------------------------------------------
     def generateDateTime(self, s):
-        """生成时间"""
+        """GenerationTime"""
         dt = datetime.fromtimestamp(float(s)/1e3)
         time = dt.strftime("%H:%M:%S.%f")
         date = dt.strftime("%Y%m%d")

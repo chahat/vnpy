@@ -1,3 +1,3 @@
-# 天勤历史行情服务
+# Tianqin historical market service
 
-请在[www.tq18.cn](www.tq18.cn)下载天勤行情终端，安装运行后，即可使用该服务。
+please at [www.tq18.cn](www.tq18.cn)Download the Tianqin Quotes Terminal and use it after installation and operation.

@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 '''
-本文件包含了CTA引擎中的策略开发用模板，开发策略时需要继承CtaTemplate类。
+This file contains the template for policy development in the CTA engine. You need to inherit the CtaTemplate class when developing the strategy.
 '''
 
 from vnpy.trader.vtConstant import *
@@ -12,39 +12,39 @@ from .ctaBase import *
 
 ########################################################################
 class CtaTemplate(object):
-    """CTA策略模板"""
+    """CTAPolicyTemplate"""
     
-    # 策略类的名称和作者
+    # TheNameAndAuthorOfTheStrategyClass
     className = 'CtaTemplate'
     author = EMPTY_UNICODE
     
-    # MongoDB数据库的名称，K线数据库默认为1分钟
+    # MongoDB The name of the database, the K-line database defaults to 1 minute.
     tickDbName = TICK_DB_NAME
     barDbName = MINUTE_DB_NAME
     
-    # 策略的基本参数
-    name = EMPTY_UNICODE           # 策略实例名称
-    vtSymbol = EMPTY_STRING        # 交易的合约vt系统代码    
-    productClass = EMPTY_STRING    # 产品类型（只有IB接口需要）
-    currency = EMPTY_STRING        # 货币（只有IB接口需要）
+    # basicParametersOfTheStrategy
+    name = EMPTY_UNICODE           # PolicyInstanceName
+    vtSymbol = EMPTY_STRING        # ContractVtSystemCodeForTrading
+    productClass = EMPTY_STRING    # ProductTypeOnlyRequiredForIBInterface
+    currency = EMPTY_STRING        # CurrencyOnlyRequiredForIBInterface
     
-    # 策略的基本变量，由引擎管理
-    inited = False                 # 是否进行了初始化
-    trading = False                # 是否启动交易，由引擎管理
-    pos = 0                        # 持仓情况
+    # The basic variables of the strategy, managed by the engine
+    inited = False                 # WhetherItWasInitialized
+    trading = False                # Whether to initiate a transaction, managed by the engine
+    pos = 0                        # Position
     
-    # 参数列表，保存了参数的名称
+    # ListOfParametersSaveTheNameOfTheParameter
     paramList = ['name',
                  'className',
                  'author',
                  'vtSymbol']
     
-    # 变量列表，保存了变量的名称
+    # List of variables, the name of the variable is saved
     varList = ['inited',
                'trading',
                'pos']
     
-    # 同步列表，保存了需要保存到数据库的变量名称
+    # Synchronize the list and save the name of the variable that needs to be saved to the database
     syncList = ['pos']
 
     #----------------------------------------------------------------------
@@ -52,7 +52,7 @@ class CtaTemplate(object):
         """Constructor"""
         self.ctaEngine = ctaEngine
 
-        # 设置策略的参数
+        # SetTheParametersOfThePolicy
         if setting:
             d = self.__dict__
             for key in self.paramList:
@@ -61,82 +61,82 @@ class CtaTemplate(object):
     
     #----------------------------------------------------------------------
     def onInit(self):
-        """初始化策略（必须由用户继承实现）"""
+        """Initialization strategy (must be implemented by user inheritance)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def onStart(self):
-        """启动策略（必须由用户继承实现）"""
+        """Startup policy (must be implemented by user inheritance)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def onStop(self):
-        """停止策略（必须由用户继承实现）"""
+        """Stop policy (must be implemented by user inheritance)"""
         raise NotImplementedError
 
     #----------------------------------------------------------------------
     def onTick(self, tick):
-        """收到行情TICK推送（必须由用户继承实现）"""
+        """Received market TICK push (must be implemented by user inheritance)"""
         raise NotImplementedError
 
     #----------------------------------------------------------------------
     def onOrder(self, order):
-        """收到委托变化推送（必须由用户继承实现）"""
+        """Received a delegate change push (must be implemented by the user)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def onTrade(self, trade):
-        """收到成交推送（必须由用户继承实现）"""
+        """Received a transaction push (must be implemented by the user)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def onBar(self, bar):
-        """收到Bar推送（必须由用户继承实现）"""
+        """Received a Bar push (must be implemented by the user)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def onStopOrder(self, so):
-        """收到停止单推送（必须由用户继承实现）"""
+        """Received a stop push (must be inherited by the user)"""
         raise NotImplementedError
     
     #----------------------------------------------------------------------
     def buy(self, price, volume, stop=False):
-        """买开"""
+        """BuyOpen"""
         return self.sendOrder(CTAORDER_BUY, price, volume, stop)
     
     #----------------------------------------------------------------------
     def sell(self, price, volume, stop=False):
-        """卖平"""
+        """Sell​​Flat"""
         return self.sendOrder(CTAORDER_SELL, price, volume, stop)       
 
     #----------------------------------------------------------------------
     def short(self, price, volume, stop=False):
-        """卖开"""
+        """Sell​​Open"""
         return self.sendOrder(CTAORDER_SHORT, price, volume, stop)          
  
     #----------------------------------------------------------------------
     def cover(self, price, volume, stop=False):
-        """买平"""
+        """BuyFlat"""
         return self.sendOrder(CTAORDER_COVER, price, volume, stop)
         
     #----------------------------------------------------------------------
     def sendOrder(self, orderType, price, volume, stop=False):
-        """发送委托"""
+        """SendCommission"""
         if self.trading:
-            # 如果stop为True，则意味着发本地停止单
+            # If stop is True, it means sending a local stop order.
             if stop:
                 vtOrderIDList = self.ctaEngine.sendStopOrder(self.vtSymbol, orderType, price, volume, self)
             else:
                 vtOrderIDList = self.ctaEngine.sendOrder(self.vtSymbol, orderType, price, volume, self) 
             return vtOrderIDList
         else:
-            # 交易停止时发单返回空字符串
+            # Billing returns an empty string when the transaction stops
             return []
         
     #----------------------------------------------------------------------
     def cancelOrder(self, vtOrderID):
-        """撤单"""
-        # 如果发单号为空字符串，则不进行后续操作
+        """Withdrawal"""
+        # If the billing number is an empty string, no further operations are performed.
         if not vtOrderID:
             return
         
@@ -147,88 +147,88 @@ class CtaTemplate(object):
             
     #----------------------------------------------------------------------
     def cancelAll(self):
-        """全部撤单"""
+        """AllWithdrawals"""
         self.ctaEngine.cancelAll(self.name)
     
     #----------------------------------------------------------------------
     def insertTick(self, tick):
-        """向数据库中插入tick数据"""
+        """InsertTickDataIntoTheDatabase"""
         self.ctaEngine.insertData(self.tickDbName, self.vtSymbol, tick)
     
     #----------------------------------------------------------------------
     def insertBar(self, bar):
-        """向数据库中插入bar数据"""
+        """InsertBarDataIntoTheDatabase"""
         self.ctaEngine.insertData(self.barDbName, self.vtSymbol, bar)
         
     #----------------------------------------------------------------------
     def loadTick(self, days):
-        """读取tick数据"""
+        """ReadTickData"""
         return self.ctaEngine.loadTick(self.tickDbName, self.vtSymbol, days)
     
     #----------------------------------------------------------------------
     def loadBar(self, days):
-        """读取bar数据"""
+        """ReadBarData"""
         return self.ctaEngine.loadBar(self.barDbName, self.vtSymbol, days)
     
     #----------------------------------------------------------------------
     def writeCtaLog(self, content):
-        """记录CTA日志"""
+        """RecordCTALogs"""
         content = self.name + ':' + content
         self.ctaEngine.writeCtaLog(content)
         
     #----------------------------------------------------------------------
     def putEvent(self):
-        """发出策略状态变化事件"""
+        """IssueAPolicyStateChangeEvent"""
         self.ctaEngine.putStrategyEvent(self.name)
         
     #----------------------------------------------------------------------
     def getEngineType(self):
-        """查询当前运行的环境"""
+        """QueryTheCurrentlyRunningEnvironment"""
         return self.ctaEngine.engineType
     
     #----------------------------------------------------------------------
     def saveSyncData(self):
-        """保存同步数据到数据库"""
+        """SaveSynchronizedDataToTheDatabase"""
         if self.trading:
             self.ctaEngine.saveSyncData(self)
     
     #----------------------------------------------------------------------
     def getPriceTick(self):
-        """查询最小价格变动"""
+        """QueryMinimumPriceChanges"""
         return self.ctaEngine.getPriceTick(self)
         
 
 ########################################################################
 class TargetPosTemplate(CtaTemplate):
     """
-    允许直接通过修改目标持仓来实现交易的策略模板
-    
-    开发策略时，无需再调用buy/sell/cover/short这些具体的委托指令，
-    只需在策略逻辑运行完成后调用setTargetPos设置目标持仓，底层算法
-    会自动完成相关交易，适合不擅长管理交易挂撤单细节的用户。    
-    
-    使用该模板开发策略时，请在以下回调方法中先调用母类的方法：
+    A policy template that allows transactions to be implemented directly by modifying the target position
+
+    When developing a strategy, there is no need to call the specific delegate commands such as buy/sell/cover/short.
+    Just call setTargetPos to set the target position after the strategy logic runs, the underlying algorithm
+    Will automatically complete the relevant transactions, suitable for users who are not good at managing the details of the transaction withdrawal order.
+
+    When developing a strategy using this template, first call the parent class's methods in the following callback methods:
     onTick
     onBar
     onOrder
     
-    假设策略名为TestStrategy，请在onTick回调中加上：
-    super(TestStrategy, self).onTick(tick)
-    
-    其他方法类同。
+    Assuming the policy is called TestStrategy, add the onTick callback:
+    Super(TestStrategy, self).onTick(tick)
+
+    Other methods are similar.
     """
     
     className = 'TargetPosTemplate'
-    author = u'量衍投资'
+    author = u'QuantitativeInvestment'
     
-    # 目标持仓模板的基本变量
-    tickAdd = 1             # 委托时相对基准价格的超价
-    lastTick = None         # 最新tick数据
-    lastBar = None          # 最新bar数据
-    targetPos = EMPTY_INT   # 目标持仓
-    orderList = []          # 委托号列表
+    # BasicVariablesOfTheTargetPositionTemplate
+    tickAdd = 1             # Overpriced relative to the benchmark price at the time of entrustment
+    lastTick = None         # LatestTickData
+    lastBar = None          # LatestBarData
+    targetPos = EMPTY_INT   # TargetPosition
+    orderList = []          # ListOfCommissionNumbers
 
-    # 变量列表，保存了变量的名称
+    # List of variables, the name of the variable is saved
     varList = ['inited',
                'trading',
                'pos',
@@ -241,44 +241,44 @@ class TargetPosTemplate(CtaTemplate):
         
     #----------------------------------------------------------------------
     def onTick(self, tick):
-        """收到行情推送"""
+        """ReceivedMarketPush"""
         self.lastTick = tick
         
-        # 实盘模式下，启动交易后，需要根据tick的实时推送执行自动开平仓操作
+        # In the real mode, after starting the transaction, you need to perform the automatic opening and closing operation according to the real-time push of the tick.
         if self.trading:
             self.trade()
         
     #----------------------------------------------------------------------
     def onBar(self, bar):
-        """收到K线推送"""
+        """ReceivedKLinePush"""
         self.lastBar = bar
     
     #----------------------------------------------------------------------
     def onOrder(self, order):
-        """收到委托推送"""
+        """ReceivedACommissionPush"""
         if order.status == STATUS_ALLTRADED or order.status == STATUS_CANCELLED:
             if order.vtOrderID in self.orderList:
                 self.orderList.remove(order.vtOrderID)
     
     #----------------------------------------------------------------------
     def setTargetPos(self, targetPos):
-        """设置目标仓位"""
+        """SetTargetPosition"""
         self.targetPos = targetPos
         
         self.trade()
         
     #----------------------------------------------------------------------
     def trade(self):
-        """执行交易"""
-        # 先撤销之前的委托
+        """ExecuteTransaction"""
+        # FirstCancelThePreviousDelegate
         self.cancelAll()
         
-        # 如果目标仓位和实际仓位一致，则不进行任何操作
+        # If the target position is the same as the actual position, no action is taken
         posChange = self.targetPos - self.pos
         if not posChange:
             return
         
-        # 确定委托基准价格，有tick数据时优先使用，否则使用bar
+        # Determine the base price of the commission, use it when there is tick data, otherwise use bar
         longPrice = 0
         shortPrice = 0
         
@@ -286,18 +286,18 @@ class TargetPosTemplate(CtaTemplate):
             if posChange > 0:
                 longPrice = self.lastTick.askPrice1 + self.tickAdd
                 if self.lastTick.upperLimit:
-                    longPrice = min(longPrice, self.lastTick.upperLimit)         # 涨停价检查
+                    longPrice = min(longPrice, self.lastTick.upperLimit)         # UpLimitPriceCheck
             else:
                 shortPrice = self.lastTick.bidPrice1 - self.tickAdd
                 if self.lastTick.lowerLimit:
-                    shortPrice = max(shortPrice, self.lastTick.lowerLimit)       # 跌停价检查
+                    shortPrice = max(shortPrice, self.lastTick.lowerLimit)       # StopPriceCheck
         else:
             if posChange > 0:
                 longPrice = self.lastBar.close + self.tickAdd
             else:
                 shortPrice = self.lastBar.close - self.tickAdd
         
-        # 回测模式下，采用合并平仓和反向开仓委托的方式
+        # In the backtest mode, the method of merged and reversed open positions is adopted.
         if self.getEngineType() == ENGINETYPE_BACKTESTING:
             if posChange > 0:
                 l = self.buy(longPrice, abs(posChange))
@@ -305,27 +305,27 @@ class TargetPosTemplate(CtaTemplate):
                 l = self.short(shortPrice, abs(posChange))
             self.orderList.extend(l)
         
-        # 实盘模式下，首先确保之前的委托都已经结束（全成、撤销）
-        # 然后先发平仓委托，等待成交后，再发送新的开仓委托
+        # In the real mode, first make sure that the previous delegates have ended (full, undo)
+        # Then first issue the closing order, wait for the transaction, and then send a new opening order
         else:
-            # 检查之前委托都已结束
+            # theCommissionHasBeenCompletedBeforeTheCheck
             if self.orderList:
                 return
             
-            # 买入
+            # Buy
             if posChange > 0:
-                # 若当前有空头持仓
+                # IfThereIsCurrentlyAShortPosition
                 if self.pos < 0:
-                    # 若买入量小于空头持仓，则直接平空买入量
+                    # If the purchase volume is less than the short position, the direct purchase amount is
                     if posChange < abs(self.pos):
                         l = self.cover(longPrice, posChange)
-                    # 否则先平所有的空头仓位
+                    # Otherwise, all the short positions will be flattened first.
                     else:
                         l = self.cover(longPrice, abs(self.pos))
-                # 若没有空头持仓，则执行开仓操作
+                # If there is no short position, perform the opening operation
                 else:
                     l = self.buy(longPrice, abs(posChange))
-            # 卖出和以上相反
+            # SellingTheOpposite
             else:
                 if self.pos > 0:
                     if abs(posChange) < self.pos:
@@ -340,30 +340,30 @@ class TargetPosTemplate(CtaTemplate):
 ########################################################################
 class CtaSignal(object):
     """
-    CTA策略信号，负责纯粹的信号生成（目标仓位），不参与具体交易管理
+    CTA Strategy signal, responsible for pure signal generation (target position), not involved in specific transaction management
     """
 
     #----------------------------------------------------------------------
     def __init__(self):
         """Constructor"""
-        self.signalPos = 0      # 信号仓位
+        self.signalPos = 0      # SignalPosition
     
     #----------------------------------------------------------------------
     def onBar(self, bar):
-        """K线推送"""
+        """KLinePush"""
         pass
     
     #----------------------------------------------------------------------
     def onTick(self, tick):
-        """Tick推送"""
+        """Tick Push"""
         pass
         
     #----------------------------------------------------------------------
     def setSignalPos(self, pos):
-        """设置信号仓位"""
+        """SetSignalPosition"""
         self.signalPos = pos
         
     #----------------------------------------------------------------------
     def getSignalPos(self):
-        """获取信号仓位"""
+        """GetSignalPosition"""
         return self.signalPos

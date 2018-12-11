@@ -78,8 +78,8 @@ class BarGenerator(object):
 
     #----------------------------------------------------------------------
     def updateBar(self, bar):
-        """1分钟K线更新"""
-        # 尚未创建对象
+        """_1_minute_k_line_update"""
+        # ObjectNotCreatedYet
         if not self.xminBar:
             self.xminBar = VtBarData()
             
@@ -91,13 +91,13 @@ class BarGenerator(object):
             self.xminBar.high = bar.high
             self.xminBar.low = bar.low            
             
-            self.xminBar.datetime = bar.datetime    # 以第一根分钟K线的开始时间戳作为X分钟线的时间戳
-        # 累加老K线
+            self.xminBar.datetime = bar.datetime    # The start timestamp of the first minute K line is used as the timestamp of the X minute line.
+        # CumulativeOldKLine
         else:
             self.xminBar.high = max(self.xminBar.high, bar.high)
             self.xminBar.low = min(self.xminBar.low, bar.low)
     
-        # 通用部分
+        # GeneralPart
         self.xminBar.close = bar.close        
         self.xminBar.openInterest = bar.openInterest
         self.xminBar.volume += int(bar.volume)                
@@ -126,16 +126,16 @@ class BarGenerator(object):
 ########################################################################
 class ArrayManager(object):
     """
-    K线序列管理工具，负责：
-    1. K线时间序列的维护
-    2. 常用技术指标的计算
+    K-line sequence management tool, responsible for:
+    1. Maintenance of K-line time series
+    2. Calculation of commonly used technical indicators
     """
 
     #----------------------------------------------------------------------
     def __init__(self, size=100):
         """Constructor"""
-        self.count = 0                      # 缓存计数
-        self.size = size                    # 缓存大小
+        self.count = 0                      # CacheCount
+        self.size = size                    # CacheSize
         self.inited = False                 # True if count>=size
         
         self.openArray = np.zeros(size)     # OHLC
@@ -146,7 +146,7 @@ class ArrayManager(object):
         
     #----------------------------------------------------------------------
     def updateBar(self, bar):
-        """更新K线"""
+        """UpdateKLine"""
         self.count += 1
         if not self.inited and self.count >= self.size:
             self.inited = True
@@ -166,36 +166,36 @@ class ArrayManager(object):
     #----------------------------------------------------------------------
     @property
     def open(self):
-        """获取开盘价序列"""
+        """GetTheOpeningPriceSequence"""
         return self.openArray
         
     #----------------------------------------------------------------------
     @property
     def high(self):
-        """获取最高价序列"""
+        """GetTheHighestPriceSequence"""
         return self.highArray
     
     #----------------------------------------------------------------------
     @property
     def low(self):
-        """获取最低价序列"""
+        """GetTheLowestPriceSequence"""
         return self.lowArray
     
     #----------------------------------------------------------------------
     @property
     def close(self):
-        """获取收盘价序列"""
+        """GetTheClosingPriceSequence"""
         return self.closeArray
     
     #----------------------------------------------------------------------
     @property    
     def volume(self):
-        """获取成交量序列"""
+        """GetVolumeSequence"""
         return self.volumeArray
     
     #----------------------------------------------------------------------
     def sma(self, n, array=False):
-        """简单均线"""
+        """SimpleMovingAverage"""
         result = talib.SMA(self.close, n)
         if array:
             return result
@@ -203,7 +203,7 @@ class ArrayManager(object):
         
     #----------------------------------------------------------------------
     def std(self, n, array=False):
-        """标准差"""
+        """StandardDeviation"""
         result = talib.STDDEV(self.close, n)
         if array:
             return result
@@ -211,7 +211,7 @@ class ArrayManager(object):
     
     #----------------------------------------------------------------------
     def cci(self, n, array=False):
-        """CCI指标"""
+        """CCIIndicator"""
         result = talib.CCI(self.high, self.low, self.close, n)
         if array:
             return result
@@ -219,7 +219,7 @@ class ArrayManager(object):
         
     #----------------------------------------------------------------------
     def atr(self, n, array=False):
-        """ATR指标"""
+        """ATRIndicator"""
         result = talib.ATR(self.high, self.low, self.close, n)
         if array:
             return result
@@ -227,7 +227,7 @@ class ArrayManager(object):
         
     #----------------------------------------------------------------------
     def rsi(self, n, array=False):
-        """RSI指标"""
+        """RSIIndicator"""
         result = talib.RSI(self.close, n)
         if array:
             return result
@@ -235,7 +235,7 @@ class ArrayManager(object):
     
     #----------------------------------------------------------------------
     def macd(self, fastPeriod, slowPeriod, signalPeriod, array=False):
-        """MACD指标"""
+        """MACDIndicator"""
         macd, signal, hist = talib.MACD(self.close, fastPeriod,
                                         slowPeriod, signalPeriod)
         if array:
@@ -244,7 +244,7 @@ class ArrayManager(object):
     
     #----------------------------------------------------------------------
     def adx(self, n, array=False):
-        """ADX指标"""
+        """ADXIndicator"""
         result = talib.ADX(self.high, self.low, self.close, n)
         if array:
             return result

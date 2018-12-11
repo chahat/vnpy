@@ -30,7 +30,7 @@ TESTNET_WEBSOCKET_HOST = 'wss://testnet.bitmex.com/realtime'
 
 ########################################################################
 class BitmexRestApi(object):
-    """REST API"""
+    """REST API EXCHANGE"""
 
     #----------------------------------------------------------------------
     def __init__(self):

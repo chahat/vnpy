@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 '''
-vnpy.api.bitmex的gateway接入
+vnpy.api.bitmexGatewayAccess
 '''
 from __future__ import print_function
 
@@ -20,18 +20,18 @@ from vnpy.api.coinbase import CoinbaseRestApi, CoinbaseWebsocketApi
 from vnpy.trader.vtGateway import *
 from vnpy.trader.vtFunction import getJsonPath, getTempPath
 
-# 方向映射
+# DirectionMapping
 directionMap = {}
 directionMap[DIRECTION_LONG] = 'buy'
 directionMap[DIRECTION_SHORT] = 'sell'
 directionMapReverse = {v:k for k,v in directionMap.items()}
 
-# 价格类型映射
+# PriceTypeMapping
 priceTypeMap = {}
 priceTypeMap[PRICETYPE_LIMITPRICE] = 'limit'
 priceTypeMap[PRICETYPE_MARKETPRICE] = 'market'
 
-# 数据缓存字典
+# DataCacheDictionary
 cancelDict = {}     # orderID:req
 orderDict = {}      # sysID:order
 orderSysDict = {}   # orderID:sysID
@@ -39,7 +39,7 @@ orderSysDict = {}   # orderID:sysID
 
 ########################################################################
 class CoinbaseGateway(VtGateway):
-    """Bitfinex接口"""
+    """BitfinexInterface"""
 
     #----------------------------------------------------------------------
     def __init__(self, eventEngine, gatewayName=''):
@@ -49,24 +49,24 @@ class CoinbaseGateway(VtGateway):
         self.restApi = RestApi(self)
         self.wsApi = WebsocketApi(self)
 
-        self.qryEnabled = False         # 是否要启动循环查询
+        self.qryEnabled = False         # Do you want to start a loop query?
 
         self.fileName = self.gatewayName + '_connect.json'
         self.filePath = getJsonPath(self.fileName, __file__)
         
     #----------------------------------------------------------------------
     def connect(self):
-        """连接"""
+        """Connection"""
         try:
             f = open(self.filePath)
         except IOError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'读取连接配置出错，请检查'
+            log.logContent = u'Error reading connection configuration, please check'
             self.onLog(log)
             return
 
-        # 解析json文件
+        # ParsingJsonFiles
         setting = json.load(f)
         f.close()
         try:
@@ -78,91 +78,91 @@ class CoinbaseGateway(VtGateway):
         except KeyError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'连接配置缺少字段，请检查'
+            log.logContent = u'Connection configuration missing field, please check'
             self.onLog(log)
             return
 
-        # 创建行情和交易接口对象
+        # CreateQuotesAndTradingInterfaceObjects
         self.restApi.connect(apiKey, secretKey, passphrase, sessionCount)
         self.wsApi.connect(apiKey, secretKey, passphrase, symbols)
 
-        # 初始化并启动查询
+        # InitializeAndStartTheQuery
         self.initQuery()
 
     #----------------------------------------------------------------------
     def subscribe(self, subscribeReq):
-        """订阅行情"""
+        """SubscribeToTheMarket"""
         pass
 
     #----------------------------------------------------------------------
     def sendOrder(self, orderReq):
-        """发单"""
+        """Billing"""
         return self.restApi.sendOrder(orderReq)
 
     #----------------------------------------------------------------------
     def cancelOrder(self, cancelOrderReq):
-        """撤单"""
+        """Withdrawal"""
         self.restApi.cancelOrder(cancelOrderReq)
 
     #----------------------------------------------------------------------
     def close(self):
-        """关闭"""
+        """close"""
         self.restApi.close()
         self.wsApi.close()
     
     #----------------------------------------------------------------------
     def initQuery(self):
-        """初始化连续查询"""
+        """InitializeContinuousQuery"""
         if self.qryEnabled:
-            # 需要循环的查询函数列表
+            # ListOfQueryFunctionsThatNeedToBeLooped
             self.qryFunctionList = [self.restApi.qryAccount]
 
-            self.qryCount = 0           # 查询触发倒计时
-            self.qryTrigger = 1         # 查询触发点
-            self.qryNextFunction = 0    # 上次运行的查询函数索引
+            self.qryCount = 0           # QueryTriggerCountdown
+            self.qryTrigger = 1         # QueryTriggerPoint
+            self.qryNextFunction = 0    # LastRunQueryFunctionIndex
 
             self.startQuery()
 
     #----------------------------------------------------------------------
     def query(self, event):
-        """注册到事件处理引擎上的查询函数"""
+        """Register to the query function on the event processing engine"""
         self.qryCount += 1
 
         if self.qryCount > self.qryTrigger:
-            # 清空倒计时
+            # EmptyCountdown
             self.qryCount = 0
 
-            # 执行查询函数
+            # ExecuteTheQueryFunction
             function = self.qryFunctionList[self.qryNextFunction]
             function()
 
-            # 计算下次查询函数的索引，如果超过了列表长度，则重新设为0
+            # Calculate the index of the next query function, if it exceeds the length of the list, reset it to 0
             self.qryNextFunction += 1
             if self.qryNextFunction == len(self.qryFunctionList):
                 self.qryNextFunction = 0
 
     #----------------------------------------------------------------------
     def startQuery(self):
-        """启动连续查询"""
+        """StartContinuousQuery"""
         self.eventEngine.register(EVENT_TIMER, self.query)
 
     #----------------------------------------------------------------------
     def setQryEnabled(self, qryEnabled):
-        """设置是否要启动循环查询"""
+        """SetWhetherYouWantToStartACircularQuery"""
         self.qryEnabled = qryEnabled
 
 
 ########################################################################
 class RestApi(CoinbaseRestApi):
-    """REST API实现"""
+    """REST APIImplementation"""
 
     #----------------------------------------------------------------------
     def __init__(self, gateway):
         """Constructor"""
         super(RestApi, self).__init__()
 
-        self.gateway = gateway                  # gateway对象
-        self.gatewayName = gateway.gatewayName  # gateway对象名称
+        self.gateway = gateway                  # GatewayObject
+        self.gatewayName = gateway.gatewayName  # GatewayObjectName
         
         self.orderSysDict = {}
         self.sysOrderDict = {}
@@ -170,18 +170,18 @@ class RestApi(CoinbaseRestApi):
         
     #----------------------------------------------------------------------
     def connect(self, apiKey, secretKey, passphrase, sessionCount):
-        """连接服务器"""
+        """ConnectToTheServer"""
         self.init(apiKey, secretKey, passphrase)
         self.start(sessionCount)
         
-        self.writeLog(u'REST API启动成功')
+        self.writeLog(u'REST API Successful startup')
         
         self.qryContract()
         self.qryOrder()
     
     #----------------------------------------------------------------------
     def writeLog(self, content):
-        """发出日志"""
+        """issueLog"""
         log = VtLogData()
         log.gatewayName = self.gatewayName
         log.logContent = content
@@ -327,7 +327,7 @@ class RestApi(CoinbaseRestApi):
             orderDict[order.orderID] = order
             orderSysDict[order.orderID] = order.orderID
         
-        self.writeLog(u'委托信息查询成功')
+        self.writeLog(u'Entrusted information query succeeded')
 
 
 ########################################################################
@@ -383,14 +383,14 @@ class WebsocketApi(CoinbaseWebsocketApi):
     
     #----------------------------------------------------------------------
     def onConnect(self):
-        """连接回调"""
-        self.writeLog(u'Websocket API连接成功')
+        """ConnectionCallback"""
+        self.writeLog(u'Websocket API Connection Succeeded')
         
         self.subscribe()
     
     #----------------------------------------------------------------------
     def onData(self, data):
-        """数据回调"""
+        """DataCallback"""
         if 'type' in data:
             cb = self.callbackDict.get(data['type'], None)
             if cb:
@@ -400,12 +400,12 @@ class WebsocketApi(CoinbaseWebsocketApi):
     
     #----------------------------------------------------------------------
     def onError(self, msg):
-        """错误回调"""
+        """ErrorCallback"""
         self.writeLog(msg)
     
     #----------------------------------------------------------------------
     def writeLog(self, content):
-        """发出日志"""
+        """IssueLog"""
         log = VtLogData()
         log.gatewayName = self.gatewayName
         log.logContent = content
@@ -614,11 +614,11 @@ class WebsocketApi(CoinbaseWebsocketApi):
         
         self.gateway.onOrder(order)        
         
-        # 缓存委托
+        # CacheDelegate
         orderDict[sysID] = order
         orderSysDict[orderID] = sysID
         
-        # 执行待撤单
+        # ExecutionPendingOrder
         if orderID in cancelDict:
             req = cancelDict.pop(orderID)
             self.gateway.cancelOrder(req)

@@ -23,7 +23,7 @@ COLOR_GREEN = QtGui.QColor('green')
 
 ########################################################################
 class BasicCell(QtWidgets.QTableWidgetItem):
-    """基础的单元格"""
+    """BasicCell"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -38,7 +38,7 @@ class BasicCell(QtWidgets.QTableWidgetItem):
     
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         if text == '0' or text == '0.0':
             self.setText('')
         else:
@@ -47,7 +47,7 @@ class BasicCell(QtWidgets.QTableWidgetItem):
 
 ########################################################################
 class NumCell(BasicCell):
-    """用来显示数字的单元格"""
+    """TheCellUsedToDisplayTheNumber"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -56,10 +56,10 @@ class NumCell(BasicCell):
         
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
-        # 考虑到NumCell主要用来显示OrderID和TradeID之类的整数字段，
-        # 这里的数据转化方式使用int类型。但是由于部分交易接口的委托
-        # 号和成交号可能不是纯数字的形式，因此补充了一个try...except
+        """SettingContent"""
+        # Considering that NumCell is mainly used to display integer fields such as OrderID and TradeID,
+        # The data conversion method here uses the int type. But due to the commission of part of the trading interface
+        # The number and the transaction number may not be in the form of a pure number, so a supplement is added. try...except
         try:
             num = int(text)
             self.setData(QtCore.Qt.DisplayRole, num)
@@ -69,7 +69,7 @@ class NumCell(BasicCell):
 
 ########################################################################
 class DirectionCell(BasicCell):
-    """用来显示买卖方向的单元格"""
+    """The cell used to display the direction of purchase and sale"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -78,7 +78,7 @@ class DirectionCell(BasicCell):
         
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         if text == DIRECTION_LONG or text == DIRECTION_NET:
             self.setForeground(QtGui.QColor('red'))
         elif text == DIRECTION_SHORT:
@@ -88,7 +88,7 @@ class DirectionCell(BasicCell):
 
 ########################################################################
 class NameCell(BasicCell):
-    """用来显示合约中文的单元格"""
+    """TheCellUsedToDisplayTheContractChinese"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -103,19 +103,19 @@ class NameCell(BasicCell):
         
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         if self.mainEngine:
-            # 首先尝试正常获取合约对象
+            # FirstTryToGetTheContractObjectNormally
             contract = self.mainEngine.getContract(text)
             
-            # 如果能读取合约信息
+            # IfYouCanReadTheContractInformation
             if contract:
                 self.setText(contract.name)
 
 
 ########################################################################
 class BidCell(BasicCell):
-    """买价单元格"""
+    """BidPriceCell"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -127,13 +127,13 @@ class BidCell(BasicCell):
         
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         self.setText(text)
 
 
 ########################################################################
 class AskCell(BasicCell):
-    """卖价单元格"""
+    """SellingPriceCell"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -145,13 +145,13 @@ class AskCell(BasicCell):
         
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         self.setText(text)
 
 
 ########################################################################
 class PnlCell(BasicCell):
-    """显示盈亏的单元格"""
+    """CellShowingProfitAndLoss"""
 
     #----------------------------------------------------------------------
     def __init__(self, text=None, mainEngine=None):
@@ -164,7 +164,7 @@ class PnlCell(BasicCell):
     
     #----------------------------------------------------------------------
     def setContent(self, text):
-        """设置内容"""
+        """SettingContent"""
         self.setText(text)
 
         try:
@@ -182,10 +182,10 @@ class PnlCell(BasicCell):
 ########################################################################
 class BasicMonitor(QtWidgets.QTableWidget):
     """
-    基础监控
+    BasicMonitoring
     
-    headerDict中的值对应的字典格式如下
-    {'chinese': u'中文名', 'cellType': BasicCell}
+    headerDictThe dictionary format corresponding to the value in the following is as follows
+    {'chinese': u'ChineseName', 'cellType': BasicCell}
     
     """
     signal = QtCore.Signal(type(Event()))
@@ -198,110 +198,110 @@ class BasicMonitor(QtWidgets.QTableWidget):
         self.mainEngine = mainEngine
         self.eventEngine = eventEngine
         
-        # 保存表头标签用
-        self.headerDict = OrderedDict()  # 有序字典，key是英文名，value是对应的配置字典
-        self.headerList = []             # 对应self.headerDict.keys()
+        # SaveTheHeaderTag
+        self.headerDict = OrderedDict()  # Ordered dictionary, key is the English name, value is the corresponding configuration dictionary
+        self.headerList = []             # CorrespondingToSelfHeaderDictKeys
         
-        # 保存相关数据用
-        self.dataDict = {}  # 字典，key是字段对应的数据，value是保存相关单元格的字典
-        self.dataKey = ''   # 字典键对应的数据字段
+        # SaveRelevantData
+        self.dataDict = {}  # Dictionary, key is the data corresponding to the field, and value is the dictionary that holds the relevant cell.
+        self.dataKey = ''   # The data field corresponding to the dictionary key
         
-        # 监控的事件类型
+        # MonitoredEventType
         self.eventType = ''
         
-        # 列宽调整状态（只在第一次更新数据时调整一次列宽）
+        # Column width adjustment state (just adjust column width once when data is first updated)
         self.columnResized = False
         
-        # 字体
+        # Font
         self.font = None
         
-        # 保存数据对象到单元格
+        # SaveDataObjectToCell
         self.saveData = False
         
-        # 默认不允许根据表头进行排序，需要的组件可以开启
+        # By default, sorting based on the header is not allowed, and the required components can be turned on.
         self.sorting = False
         
-        # 默认表头可调整
+        # DefaultHeaderCanBeAdjusted
         self.resizeMode = QtWidgets.QHeaderView.Interactive
         
-        # 初始化右键菜单
+        # InitializeTheContextMenu
         self.initMenu()
         
     #----------------------------------------------------------------------
     def setHeaderDict(self, headerDict):
-        """设置表头有序字典"""
+        """SetTheHeaderOrderedDictionary"""
         self.headerDict = headerDict
         self.headerList = headerDict.keys()
         
     #----------------------------------------------------------------------
     def setDataKey(self, dataKey):
-        """设置数据字典的键"""
+        """SetTheKeyOfTheDataDictionary"""
         self.dataKey = dataKey
         
     #----------------------------------------------------------------------
     def setEventType(self, eventType):
-        """设置监控的事件类型"""
+        """SetTheTypeOfEventBeingMonitored"""
         self.eventType = eventType
         
     #----------------------------------------------------------------------
     def setFont(self, font):
-        """设置字体"""
+        """SetFont"""
         self.font = font
     
     #----------------------------------------------------------------------
     def setSaveData(self, saveData):
-        """设置是否要保存数据到单元格"""
+        """SetWhetherYouWantToSaveDataToTheCell"""
         self.saveData = saveData
         
     #----------------------------------------------------------------------
     def initTable(self):
-        """初始化表格"""
-        # 设置表格的列数
+        """InitializationForm"""
+        # SetTheNumberOfColumnsInTheTable
         col = len(self.headerDict)
         self.setColumnCount(col)
         
-        # 设置列表头
+        # SetListHeader
         labels = [d['chinese'] for d in self.headerDict.values()]
         self.setHorizontalHeaderLabels(labels)
         
-        # 关闭左边的垂直表头
+        # CloseTheVerticalHeaderOnTheLeft
         self.verticalHeader().setVisible(False)
         
-        # 设为不可编辑
+        # SetToNotEditable
         self.setEditTriggers(self.NoEditTriggers)
         
-        # 设为行交替颜色
+        # SetToLineAlternateColor
         self.setAlternatingRowColors(True)
         
-        # 设置允许排序
+        # SetAllowSorting
         self.setSortingEnabled(self.sorting)
         
-        # 设为表头拉伸
+        # SetToHeadExtension
         self.horizontalHeader().setSectionResizeMode(self.resizeMode)
 
     #----------------------------------------------------------------------
     def registerEvent(self):
-        """注册GUI更新相关的事件监听"""
+        """RegisterGUIUpdateRelatedEventListeners"""
         self.signal.connect(self.updateEvent)
         self.eventEngine.register(self.eventType, self.signal.emit)
         
     #----------------------------------------------------------------------
     def updateEvent(self, event):
-        """收到事件更新"""
+        """ReceiveEventUpdates"""
         data = event.dict_['data']
         self.updateData(data)
     
     #----------------------------------------------------------------------
     def updateData(self, data):
-        """将数据更新到表格中"""
-        # 如果允许了排序功能，则插入数据前必须关闭，否则插入新的数据会变乱
+        """UpdateTheDataToTheTable"""
+        # If sorting is allowed, it must be turned off before inserting data, otherwise inserting new data will be messy
         if self.sorting:
             self.setSortingEnabled(False)
         
-        # 如果设置了dataKey，则采用存量更新模式
+        # If the dataKey is set, the inventory update mode is used.
         if self.dataKey:
             key = data.__getattribute__(self.dataKey)
-            # 如果键在数据字典中不存在，则先插入新的一行，并创建对应单元格
+            # If the key does not exist in the data dictionary, insert a new line first and create the corresponding cell
             if key not in self.dataDict:
                 self.insertRow(0)     
                 d = {}
@@ -311,15 +311,15 @@ class BasicMonitor(QtWidgets.QTableWidget):
                     cell = cellType(content, self.mainEngine)
                     
                     if self.font:
-                        cell.setFont(self.font)  # 如果设置了特殊字体，则进行单元格设置
+                        cell.setFont(self.font)  # Make cell settings if special fonts are set
                     
-                    if self.saveData:            # 如果设置了保存数据对象，则进行对象保存
+                    if self.saveData:            # If the save data object is set, save the object
                         cell.data = data
                         
                     self.setItem(0, n, cell)
                     d[header] = cell
                 self.dataDict[key] = d
-            # 否则如果已经存在，则直接更新相关单元格
+            # Otherwise, if it already exists, update the relevant cell directly
             else:
                 d = self.dataDict[key]
                 for header in self.headerList:
@@ -327,9 +327,9 @@ class BasicMonitor(QtWidgets.QTableWidget):
                     cell = d[header]
                     cell.setContent(content)
                     
-                    if self.saveData:            # 如果设置了保存数据对象，则进行对象保存
+                    if self.saveData:            # If the save data object is set, save the object
                         cell.data = data                    
-        # 否则采用增量更新模式
+        # Otherwise use incremental update mode
         else:
             self.insertRow(0)  
             for n, header in enumerate(self.headerList):
@@ -345,23 +345,23 @@ class BasicMonitor(QtWidgets.QTableWidget):
 
                 self.setItem(0, n, cell)                        
                 
-        ## 调整列宽
+        ## Adjust column width
         #if not self.columnResized:
             #self.resizeColumns()
             #self.columnResized = True
         
-        # 重新打开排序
+        # ReopenSort
         if self.sorting:
             self.setSortingEnabled(True)
     
     #----------------------------------------------------------------------
     def resizeColumns(self):
-        """调整各列的大小"""
+        """AdjustTheSizeOfEachColumn"""
         self.horizontalHeader().resizeSections(QtWidgets.QHeaderView.ResizeToContents)    
         
     #----------------------------------------------------------------------
     def setSorting(self, sorting):
-        """设置是否允许根据表头排序"""
+        """Set whether to allow sorting according to the header"""
         self.sorting = sorting
     
     #----------------------------------------------------------------------
@@ -371,11 +371,11 @@ class BasicMonitor(QtWidgets.QTableWidget):
         
     #----------------------------------------------------------------------
     def saveToCsv(self):
-        """保存表格内容到CSV文件"""
-        # 先隐藏右键菜单
+        """SaveTheTableContentsToACSVFile"""
+        # HideTheRightClickMenuFirst
         self.menu.close()
         
-        # 获取想要保存的文件名
+        # GetTheNameOfTheFileYouWantToSave
         path, fileType = QtWidgets.QFileDialog.getSaveFileName(self, vtText.SAVE_DATA, '', 'CSV(*.csv)')
 
         try:
@@ -384,11 +384,11 @@ class BasicMonitor(QtWidgets.QTableWidget):
                 with open(unicode(path), 'wb') as f:
                     writer = csv.writer(f)
                     
-                    # 保存标签
+                    # SaveLabel
                     headers = [header.encode('gbk') for header in self.headerList]
                     writer.writerow(headers)
                     
-                    # 保存每行内容
+                    # SaveEachLineOfContent
                     for row in range(self.rowCount()):
                         rowdata = []
                         for column in range(self.columnCount()):
@@ -404,7 +404,7 @@ class BasicMonitor(QtWidgets.QTableWidget):
 
     #----------------------------------------------------------------------
     def initMenu(self):
-        """初始化右键菜单"""
+        """InitializeTheContextMenu"""
         self.menu = QtWidgets.QMenu(self)    
         
         resizeAction = QtWidgets.QAction(vtText.RESIZE_COLUMNS, self)
@@ -418,20 +418,20 @@ class BasicMonitor(QtWidgets.QTableWidget):
         
     #----------------------------------------------------------------------
     def contextMenuEvent(self, event):
-        """右键点击事件"""
+        """RightClickEvent"""
         self.menu.popup(QtGui.QCursor.pos())    
 
 
 ########################################################################
 class MarketMonitor(BasicMonitor):
-    """市场监控组件"""
+    """MarketMonitoringComponent"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine, parent=None):
         """Constructor"""
         super(MarketMonitor, self).__init__(mainEngine, eventEngine, parent)
         
-        # 设置表头有序字典
+        # SetTheHeaderOrderedDictionary
         d = OrderedDict()
         d['gatewayName'] = {'chinese':vtText.GATEWAY, 'cellType':BasicCell}
         d['symbol'] = {'chinese':vtText.CONTRACT_SYMBOL, 'cellType':BasicCell}
@@ -461,7 +461,7 @@ class MarketMonitor(BasicMonitor):
 
 ########################################################################
 class LogMonitor(BasicMonitor):
-    """日志监控"""
+    """LogMonitoring"""
     signalError = QtCore.Signal(type(Event()))
 
     #----------------------------------------------------------------------
@@ -490,7 +490,7 @@ class LogMonitor(BasicMonitor):
     def processErrorEvent(self, event):
         """"""
         error = event.dict_['data']
-        logContent = u'发生错误，错误代码:%s，错误信息:%s' %(error.errorID, error.errorMsg)
+        logContent = u'An error occurred, error code: %s, error message: %s' %(error.errorID, error.errorMsg)
         
         self.insertRow(0)
         cellLogTime = BasicCell(error.errorTime)
@@ -505,7 +505,7 @@ class LogMonitor(BasicMonitor):
 
 ########################################################################
 class TradeMonitor(BasicMonitor):
-    """成交监控"""
+    """TransactionMonitoring"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine, parent=None):
@@ -536,7 +536,7 @@ class TradeMonitor(BasicMonitor):
 
 ########################################################################
 class OrderMonitor(BasicMonitor):
-    """委托监控"""
+    """CommissionMonitoring"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine, parent=None):
@@ -570,13 +570,13 @@ class OrderMonitor(BasicMonitor):
         
     #----------------------------------------------------------------------
     def connectSignal(self):
-        """连接信号"""
-        # 双击单元格撤单
+        """ConnectionSignal"""
+        # DoubleClickOnTheCellToWithdrawTheOrder
         self.itemDoubleClicked.connect(self.cancelOrder) 
     
     #----------------------------------------------------------------------
     def cancelOrder(self, cell):
-        """根据单元格的数据撤单"""
+        """DataWithdrawalBasedOnCell"""
         order = cell.data
         
         req = VtCancelOrderReq()
@@ -590,7 +590,7 @@ class OrderMonitor(BasicMonitor):
 
 ########################################################################
 class PositionMonitor(BasicMonitor):
-    """持仓监控"""
+    """PositionMonitoring"""
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine, parent=None):
         """Constructor"""
@@ -617,41 +617,41 @@ class PositionMonitor(BasicMonitor):
         
 ########################################################################
 class AccountMonitor(BasicMonitor):
-    """账户监控"""
+    """AccountMonitoring"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine, parent=None):
         """Constructor"""
         super(AccountMonitor, self).__init__(mainEngine, eventEngine, parent)
-        
+
         d = OrderedDict()
         d['gatewayName'] = {'chinese':vtText.GATEWAY, 'cellType':BasicCell}
         d['accountID'] = {'chinese':vtText.ACCOUNT_ID, 'cellType':BasicCell}
         d['balance'] = {'chinese':vtText.BALANCE, 'cellType':BasicCell}
         d['available'] = {'chinese':vtText.AVAILABLE, 'cellType':BasicCell}
         self.setHeaderDict(d)
-        
+
         self.setDataKey('vtAccountID')
         self.setEventType(EVENT_ACCOUNT)
         self.setFont(BASIC_FONT)
         self.setSaveData(True)
         self.setResizeMode(QtWidgets.QHeaderView.Stretch)
-        
+
         self.initTable()
         self.registerEvent()
     
     #----------------------------------------------------------------------
     def updateData(self, data):
-        """更新数据"""
+        """UpdateData"""
         super(AccountMonitor, self).updateData(data)
 
-        # 如果该委托已完成，则隐藏该行
+        # Hide the line if the delegate has completed
         vtAccountID = data.vtAccountID
         cellDict = self.dataDict[vtAccountID]
         cell = cellDict['balance']
         row = self.row(cell)
-        
-        if data.balance == 0:    
+
+        if data.balance == 0:
             self.hideRow(row)
         else:
             self.showRow(row)
@@ -659,7 +659,7 @@ class AccountMonitor(BasicMonitor):
 
 ########################################################################
 class DepthMonitor(QtWidgets.QTableWidget):
-    """报价深度监控"""
+    """DeepMonitoringOfQuotation"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, eventEngine):
@@ -676,9 +676,9 @@ class DepthMonitor(QtWidgets.QTableWidget):
     #----------------------------------------------------------------------
     def initUi(self):
         """"""
-        labels = [u'价格',
-                  u'数量',
-                  u'总额']
+        labels = [u'Price',
+                  u'Quantity',
+                  u'Total']
         
         self.setColumnCount(len(labels))
         self.setHorizontalHeaderLabels(labels)
@@ -691,7 +691,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
         left = QtCore.Qt.AlignLeft
         right = QtCore.Qt.AlignRight
         
-        # 单元格
+        # Cell
         askColor = 'green'
         bidColor = 'red'
         lastColor = 'orange'
@@ -733,7 +733,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
         
     #----------------------------------------------------------------------
     def addCell(self, name, row, col, color, alignment=None):
-        """新增单元格"""
+        """AddANewCell"""
         cell = QtWidgets.QTableWidgetItem()
         self.setItem(row, col, cell)
         self.cellDict[name] = cell
@@ -748,7 +748,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
     
     #----------------------------------------------------------------------
     def updateCell(self, name, value, decimals=None, data=None):
-        """更新单元格"""
+        """UpdateCell"""
         if decimals is not None:
             text = '%.*f' %(decimals, value)
         else:
@@ -762,7 +762,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
     
     #----------------------------------------------------------------------
     def updateTick(self, tick):
-        """更新Tick"""
+        """UpdateTick"""
         valueDecimals = 2
         
         # bid
@@ -815,7 +815,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
     
     #----------------------------------------------------------------------
     def updateVtSymbol(self, vtSymbol):
-        """更换显示行情标的"""
+        """ReplaceTheDisplayOfTheMarket"""
         for cell in self.cellDict.values():
             cell.setText('')
         
@@ -828,7 +828,7 @@ class DepthMonitor(QtWidgets.QTableWidget):
 
 ########################################################################
 class TradingWidget(QtWidgets.QFrame):
-    """简单交易组件"""
+    """SimpleTransactionComponent"""
     signal = QtCore.Signal(type(Event()))
     
     directionList = [DIRECTION_LONG,
@@ -851,7 +851,7 @@ class TradingWidget(QtWidgets.QFrame):
         
         self.vtSymbol = ''
         
-        # 添加交易接口
+        # AddTransactionInterface
         l = mainEngine.getAllGatewayDetails()
         gatewayNameList = [d['gatewayName'] for d in l]
         self.gatewayList.extend(gatewayNameList)
@@ -861,14 +861,14 @@ class TradingWidget(QtWidgets.QFrame):
 
     #----------------------------------------------------------------------
     def initUi(self):
-        """初始化界面"""
+        """InitializationInterface"""
         self.setWindowTitle(vtText.TRADING)
         self.setFixedHeight(400)
         self.setFixedWidth(600)
-        self.setFrameShape(self.Box)    # 设置边框
+        self.setFrameShape(self.Box)    # SetBorder
         self.setLineWidth(1)           
 
-        # 左边部分
+        # LeftPart
         labelPriceType = QtWidgets.QLabel(vtText.PRICE_TYPE)
         labelSymbol = QtWidgets.QLabel(u'VT代码')
         labelPrice = QtWidgets.QLabel(vtText.PRICE)
@@ -905,10 +905,10 @@ class TradingWidget(QtWidgets.QFrame):
         gridLeft.addWidget(self.linePrice, 3, 1)
         gridLeft.addWidget(self.lineVolume, 4, 1)
         
-        # 右边部分
+        # RightPart
         self.depthMonitor = DepthMonitor(self.mainEngine, self.eventEngine)
 
-        # 发单按钮
+        # BillingButton
         buttonBuy = QtWidgets.QPushButton(u'买入')
         buttonSell = QtWidgets.QPushButton(u'卖出')
         buttonCancelAll = QtWidgets.QPushButton(vtText.CANCEL_ALL)
@@ -931,7 +931,7 @@ class TradingWidget(QtWidgets.QFrame):
         gridButton.addWidget(buttonSell, 0, 1)
         gridButton.addWidget(buttonCancelAll, 1, 0, 1, 2)
         
-        # 整合布局
+        # IntegratedLayout
         vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(gridLeft)
         vbox.addLayout(gridButton)
@@ -942,33 +942,33 @@ class TradingWidget(QtWidgets.QFrame):
         
         self.setLayout(hbox)
 
-        # 关联更新
+        # AssociatedUpdate
         self.lineSymbol.returnPressed.connect(self.updateSymbol)
         self.depthMonitor.itemDoubleClicked.connect(self.updatePrice)
 
     #----------------------------------------------------------------------
     def updateSymbol(self):
-        """合约变化"""
+        """ContractChange"""
         self.vtSymbol = str(self.lineSymbol.text())
         contract = self.mainEngine.getContract(self.vtSymbol)
         
         if not contract:
             return
         
-        # 清空价格数量
+        # ClearThePriceQuantity
         self.linePrice.clear()
         self.lineVolume.clear()
 
         self.depthMonitor.updateVtSymbol(self.vtSymbol)
         
-        # 订阅合约
+        # SubscriptionContract
         req = VtSubscribeReq()
         req.symbol = contract.symbol
         self.mainEngine.subscribe(req, contract.gatewayName)
 
     #----------------------------------------------------------------------
     def updateTick(self, event):
-        """更新行情"""
+        """UpdateMarket"""
         tick = event.dict_['data']
         if tick.vtSymbol != self.vtSymbol:
             return
@@ -976,7 +976,7 @@ class TradingWidget(QtWidgets.QFrame):
 
     #----------------------------------------------------------------------
     def registerEvent(self):
-        """注册事件监听"""
+        """RegisterEventListener"""
         self.signal.connect(self.updateTick)
         self.eventEngine.register(EVENT_TICK, self.signal.emit)        
     
@@ -991,19 +991,19 @@ class TradingWidget(QtWidgets.QFrame):
 
     #----------------------------------------------------------------------
     def sendOrder(self, direction):
-        """发单"""
+        """Billing"""
         vtSymbol = str(self.lineSymbol.text())
         contract = self.mainEngine.getContract(vtSymbol)
         if not contract:
             return
 
-        # 获取价格
+        # GetThePrice
         priceText = self.linePrice.text()
         if not priceText:
             return
         price = float(priceText)
         
-        # 获取数量
+        # GetQuantity
         volumeText = self.lineVolume.text()
         if not volumeText:
             return
@@ -1013,7 +1013,7 @@ class TradingWidget(QtWidgets.QFrame):
         else:
             volume = int(volumeText)
         
-        # 委托
+        # Delegate
         req = VtOrderReq()
         req.symbol = contract.symbol
         req.price = price
@@ -1036,7 +1036,7 @@ class TradingWidget(QtWidgets.QFrame):
         
     #----------------------------------------------------------------------
     def cancelAll(self):
-        """一键撤销所有委托"""
+        """OneClickToCancelAllDelegates"""
         l = self.mainEngine.getAllWorkingOrders()
         for order in l:
             req = VtCancelOrderReq()
@@ -1050,11 +1050,11 @@ class TradingWidget(QtWidgets.QFrame):
 
 ########################################################################
 class ContractMonitor(BasicMonitor):
-    """合约查询"""
+    """ContractInquiry"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, parent=None):
-        """Constructor"""
+        """constructor"""
         super(ContractMonitor, self).__init__(parent=parent)
         
         self.mainEngine = mainEngine
@@ -1068,14 +1068,14 @@ class ContractMonitor(BasicMonitor):
         d['priceTick'] = {'chinese':vtText.PRICE_TICK, 'cellType':BasicCell}
         self.setHeaderDict(d)
         
-        # 过滤显示用的字符串
+        # FilterTheStringForDisplay
         self.filterContent = EMPTY_STRING
         
         self.initUi()
         
     #----------------------------------------------------------------------
     def initUi(self):
-        """初始化界面"""
+        """InitializationInterface"""
         self.setMinimumSize(800, 800)
         self.setFont(BASIC_FONT)
         self.setResizeMode(QtWidgets.QHeaderView.Stretch)
@@ -1084,7 +1084,7 @@ class ContractMonitor(BasicMonitor):
     
     #----------------------------------------------------------------------
     def showAllContracts(self):
-        """显示所有合约数据"""
+        """ShowAllContractData"""
         l = self.mainEngine.getAllContracts()
         d = {'.'.join([contract.exchange, contract.symbol]):contract for contract in l}
         l2 = list(d.keys())
@@ -1094,7 +1094,7 @@ class ContractMonitor(BasicMonitor):
         row = 0
         
         for key in l2:
-            # 如果设置了过滤信息且合约代码中不含过滤信息，则不显示
+            # Does not display if filter information is set and the filter code does not contain filtering information
             if self.filterContent and self.filterContent not in key:
                 continue
             
@@ -1106,7 +1106,7 @@ class ContractMonitor(BasicMonitor):
                 cell = cellType(content)
                 
                 if self.font:
-                    cell.setFont(self.font)  # 如果设置了特殊字体，则进行单元格设置
+                    cell.setFont(self.font)  # Make cell settings if special fonts are set
                     
                 self.setItem(row, n, cell)          
             
@@ -1114,15 +1114,15 @@ class ContractMonitor(BasicMonitor):
     
     #----------------------------------------------------------------------
     def refresh(self):
-        """刷新"""
-        self.menu.close()   # 关闭菜单
+        """refresh"""
+        self.menu.close()   # CloseMenu
         self.clearContents()
         self.setRowCount(0)
         self.showAllContracts()
     
     #----------------------------------------------------------------------
     def addMenuAction(self):
-        """增加右键菜单内容"""
+        """AddRightClickMenuContent"""
         refreshAction = QtWidgets.QAction(vtText.REFRESH, self)
         refreshAction.triggered.connect(self.refresh)
         
@@ -1130,19 +1130,19 @@ class ContractMonitor(BasicMonitor):
     
     #----------------------------------------------------------------------
     def show(self):
-        """显示"""
+        """Show"""
         super(ContractMonitor, self).show()
         self.refresh()
         
     #----------------------------------------------------------------------
     def setFilterContent(self, content):
-        """设置过滤字符串"""
+        """SetFilterString"""
         self.filterContent = content
     
 
 ########################################################################
 class ContractManager(QtWidgets.QWidget):
-    """合约管理组件"""
+    """ContractManagementComponent"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, parent=None):
@@ -1155,7 +1155,7 @@ class ContractManager(QtWidgets.QWidget):
     
     #----------------------------------------------------------------------
     def initUi(self):
-        """初始化界面"""
+        """InitializationInterface"""
         self.setWindowTitle(vtText.CONTRACT_SEARCH)
         
         self.lineFilter = QtWidgets.QLineEdit()
@@ -1177,7 +1177,7 @@ class ContractManager(QtWidgets.QWidget):
         
     #----------------------------------------------------------------------
     def filterContract(self):
-        """显示过滤后的合约"""
+        """ShowFilteredContract"""
         content = str(self.lineFilter.text())
         self.monitor.setFilterContent(content)
         self.monitor.refresh()
@@ -1185,7 +1185,7 @@ class ContractManager(QtWidgets.QWidget):
 
 ########################################################################
 class WorkingOrderMonitor(OrderMonitor):
-    """活动委托监控"""
+    """ActivityCommissionMonitoring"""
     STATUS_COMPLETED = [STATUS_ALLTRADED, STATUS_CANCELLED, STATUS_REJECTED]
 
     #----------------------------------------------------------------------
@@ -1195,10 +1195,10 @@ class WorkingOrderMonitor(OrderMonitor):
         
     #----------------------------------------------------------------------
     def updateData(self, data):
-        """更新数据"""
+        """UpdateData"""
         super(WorkingOrderMonitor, self).updateData(data)
 
-        # 如果该委托已完成，则隐藏该行
+        # HideTheLineIfTheDelegateHasCompleted
         if data.status in self.STATUS_COMPLETED:
             vtOrderID = data.vtOrderID
             cellDict = self.dataDict[vtOrderID]
@@ -1209,7 +1209,7 @@ class WorkingOrderMonitor(OrderMonitor):
 
 ########################################################################
 class SettingEditor(QtWidgets.QWidget):
-    """配置编辑器"""
+    """ConfigurationEditor"""
 
     #----------------------------------------------------------------------
     def __init__(self, mainEngine, parent=None):
@@ -1223,7 +1223,7 @@ class SettingEditor(QtWidgets.QWidget):
     
     #----------------------------------------------------------------------
     def initUi(self):
-        """初始化界面"""
+        """InitializationInterface"""
         self.setWindowTitle(vtText.EDIT_SETTING)
         
         self.comboFileName = QtWidgets.QComboBox()
@@ -1252,7 +1252,7 @@ class SettingEditor(QtWidgets.QWidget):
         
     #----------------------------------------------------------------------
     def loadSetting(self):
-        """加载配置"""
+        """LoadConfiguration"""
         self.currentFileName = str(self.comboFileName.currentText())
         filePath = jsonPathDict[self.currentFileName]
         self.labelPath.setText(filePath)
@@ -1261,13 +1261,13 @@ class SettingEditor(QtWidgets.QWidget):
             self.editSetting.clear()
             
             for line in f:
-                line = line.replace('\n', '')   # 移除换行符号
+                line = line.replace('\n', '')   # RemoveLineBreaks
                 line = line.decode('UTF-8')
                 self.editSetting.append(line)
     
     #----------------------------------------------------------------------
     def saveSetting(self):
-        """保存配置"""
+        """SaveConfiguration"""
         if not self.currentFileName:
             return
         
@@ -1280,12 +1280,12 @@ class SettingEditor(QtWidgets.QWidget):
         
     #----------------------------------------------------------------------
     def show(self):
-        """显示"""
-        # 更新配置文件下拉框
+        """Show"""
+        # UpdateProfileDropDownBox
         self.comboFileName.clear()
         self.comboFileName.addItems(jsonPathDict.keys())
         
-        # 显示界面
+        # UI
         super(SettingEditor, self).show()
 
     

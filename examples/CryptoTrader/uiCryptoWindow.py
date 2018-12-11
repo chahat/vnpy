@@ -11,7 +11,7 @@ from uiCryptoWidget import *
 
 ########################################################################
 class MainWindow(QtWidgets.QMainWindow):
-    """主窗口"""  
+    """MainWindow"""
 
     signalStatusBar = QtCore.Signal(type(Event()))
 
@@ -26,9 +26,9 @@ class MainWindow(QtWidgets.QMainWindow):
         l = self.mainEngine.getAllGatewayDetails()
         self.gatewayNameList = [d['gatewayName'] for d in l]        
         
-        self.widgetDict = {}    # 用来保存子窗口的字典
+        self.widgetDict = {}    # a dictionary for saving child windows
         
-        # 获取主引擎中的上层应用信息
+        # Get the upper application information in the main engine
         self.appDetailList = self.mainEngine.getAllAppDetails()
         
         self.initUi()
@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
     #----------------------------------------------------------------------
     def initUi(self):
-        """初始化界面"""
+        """initializationInterface"""
         self.setWindowTitle('VnTrader')
         self.initCentral()
         self.initMenu()
@@ -44,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
     #----------------------------------------------------------------------
     def initCentral(self):
-        """初始化中心区域"""
+        """initializeTheCentralArea"""
         widgetTradingW, dockTradingW = self.createDock(TradingWidget, vtText.TRADING, QtCore.Qt.RightDockWidgetArea) 
         widgetMarketM, dockMarketM = self.createDock(MarketMonitor, vtText.MARKET_DATA, QtCore.Qt.LeftDockWidgetArea)
         
@@ -59,16 +59,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tabifyDockWidget(dockOrderM, dockWorkingOrderM)
         self.tabifyDockWidget(dockPositionM, dockAccountM)
         
-        # 保存默认设置
+        # saveDefaultSettings
         self.saveWindowSettings('default')
         
     #----------------------------------------------------------------------
     def initMenu(self):
-        """初始化菜单"""
-        # 创建菜单
+        """InitializationMenu"""
+        # Create menu
         menubar = self.menuBar()
         
-        # 设计为只显示存在的接口
+        # Designed to display only existing interfaces
         gatewayDetails = self.mainEngine.getAllGatewayDetails()
         
         sysMenu = menubar.addMenu(vtText.SYSTEM)
@@ -102,11 +102,11 @@ class MainWindow(QtWidgets.QMainWindow):
         sysMenu.addSeparator()
         sysMenu.addAction(self.createAction(vtText.EXIT, self.close, loadIconPath('exit.ico')))
         
-        # 功能应用
+        # Functional application
         appMenu = menubar.addMenu(vtText.APPLICATION)
         
         for appDetail in self.appDetailList:
-            # 如果没有应用界面，则不添加菜单按钮
+            # If there is no application interface, no menu button is added
             if not appDetail['appWidget']:
                 continue
             
@@ -114,7 +114,7 @@ class MainWindow(QtWidgets.QMainWindow):
             action = self.createAction(appDetail['appDisplayName'], function, loadIconPath(appDetail['appIco']))
             appMenu.addAction(action)
         
-        # 帮助
+        # help
         helpMenu = menubar.addMenu(vtText.HELP)
         helpMenu.addAction(self.createAction(vtText.CONTRACT_SEARCH, self.openContract, loadIconPath('contract.ico')))
         helpMenu.addAction(self.createAction(vtText.EDIT_SETTING, self.openSettingEditor, loadIconPath('editor.ico')))
@@ -126,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def initStatusBar(self):
-        """初始化状态栏"""
+        """InitializeStatusBar"""
         self.statusLabel = QtWidgets.QLabel()
         self.statusLabel.setAlignment(QtCore.Qt.AlignLeft)
         
@@ -134,13 +134,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.statusLabel.setText(self.getCpuMemory())
         
         self.sbCount = 0
-        self.sbTrigger = 10     # 10秒刷新一次
+        self.sbTrigger = 10     # Refresh once every 10 seconds
         self.signalStatusBar.connect(self.updateStatusBar)
         self.eventEngine.register(EVENT_TIMER, self.signalStatusBar.emit)
         
     #----------------------------------------------------------------------
     def updateStatusBar(self, event):
-        """在状态栏更新CPU和内存信息"""
+        """Update CPU and memory information in the status bar"""
         self.sbCount += 1
         
         if self.sbCount == self.sbTrigger:
@@ -149,14 +149,14 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def getCpuMemory(self):
-        """获取CPU和内存状态信息"""
+        """Get CPU and memory status information"""
         cpuPercent = psutil.cpu_percent()
         memoryPercent = psutil.virtual_memory().percent
         return vtText.CPU_MEMORY_INFO.format(cpu=cpuPercent, memory=memoryPercent)
         
     #----------------------------------------------------------------------
     def addConnectAction(self, menu, gatewayName, displayName=''):
-        """增加连接功能"""
+        """Increase connection function"""
         if gatewayName not in self.gatewayNameList:
             return
         
@@ -173,7 +173,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
     #----------------------------------------------------------------------
     def createAction(self, actionName, function, iconPath=''):
-        """创建操作功能"""
+        """Create operational features"""
         action = QtWidgets.QAction(actionName, self)
         action.triggered.connect(function)
         
@@ -185,7 +185,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def createOpenAppFunction(self, appDetail):
-        """创建打开应用UI的函数"""
+        """Create a function that opens the app UI"""
         def openAppFunction():
             appName = appDetail['appName']
             try:
@@ -199,13 +199,13 @@ class MainWindow(QtWidgets.QMainWindow):
         
     #----------------------------------------------------------------------
     def test(self):
-        """测试按钮用的函数"""
-        # 有需要使用手动触发的测试函数可以写在这里
+        """Test button function"""
+        # There is a need to use a manually triggered test function can be written here
         pass
 
     #----------------------------------------------------------------------
     def openAbout(self):
-        """打开关于"""
+        """openAbout"""
         try:
             self.widgetDict['aboutW'].show()
         except KeyError:
@@ -214,7 +214,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def openContract(self):
-        """打开合约查询"""
+        """Open contract query"""
         try:
             self.widgetDict['contractM'].show()
         except KeyError:
@@ -223,7 +223,7 @@ class MainWindow(QtWidgets.QMainWindow):
             
     #----------------------------------------------------------------------
     def openSettingEditor(self):
-        """打开配置编辑"""
+        """Open configuration editing"""
         try:
             self.widgetDict['settingEditor'].show()
         except KeyError:
@@ -232,7 +232,7 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def closeEvent(self, event):
-        """关闭事件"""
+        """closingEvent"""
         reply = QtWidgets.QMessageBox.question(self, vtText.EXIT,
                                            vtText.CONFIRM_EXIT, QtWidgets.QMessageBox.Yes | 
                                            QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
@@ -249,7 +249,7 @@ class MainWindow(QtWidgets.QMainWindow):
             
     #----------------------------------------------------------------------
     def createDock(self, widgetClass, widgetName, widgetArea):
-        """创建停靠组件"""
+        """CreateDockingComponents"""
         widget = widgetClass(self.mainEngine, self.eventEngine)
         dock = QtWidgets.QDockWidget(widgetName)
         dock.setWidget(widget)
@@ -260,44 +260,44 @@ class MainWindow(QtWidgets.QMainWindow):
     
     #----------------------------------------------------------------------
     def saveWindowSettings(self, settingName):
-        """保存窗口设置"""
+        """SaveWindowSettings"""
         settings = QtCore.QSettings('vn.trader', settingName)
         settings.setValue('state', self.saveState())
         settings.setValue('geometry', self.saveGeometry())
         
     #----------------------------------------------------------------------
     def loadWindowSettings(self, settingName):
-        """载入窗口设置"""
+        """LoadWindowSettings"""
         settings = QtCore.QSettings('vn.trader', settingName)           
         state = settings.value('state')
         geometry = settings.value('geometry')
         
-        # 尚未初始化
+        # NotInitializedYet
         if state is None:
             return
-        # 老版PyQt
+        # OldVersionOfPyQt
         elif isinstance(state, QtCore.QVariant):
             self.restoreState(state.toByteArray())
             self.restoreGeometry(geometry.toByteArray())
-        # 新版PyQt
+        # NewVersionOfPyQt
         elif isinstance(state, QtCore.QByteArray):
             self.restoreState(state)
             self.restoreGeometry(geometry)
-        # 异常
+        # Default
         else:
-            content = u'载入窗口配置异常，请检查'
+            content = u'Loading window configuration exception, please check'
             self.mainEngine.writeLog(content)
         
     #----------------------------------------------------------------------
     def restoreWindow(self):
-        """还原默认窗口设置（还原停靠组件位置）"""
+        """Restore default window settings (restore docking component location)"""
         self.loadWindowSettings('default')
         self.showMaximized()
 
 
 ########################################################################
 class AboutWidget(QtWidgets.QDialog):
-    """显示关于信息"""
+    """showInformationAbout"""
 
     #----------------------------------------------------------------------
     def __init__(self, parent=None):

@@ -141,31 +141,31 @@ class MaSignal(CtaSignal):
 
 ########################################################################
 class MultiSignalStrategy(TargetPosTemplate):
-    """跨时间周期交易策略"""
+    """CrossTimeTradingStrategy"""
     className = 'MultiSignalStrategy'
-    author = u'用Python的交易员'
+    author = u'TraderWithPython'
 
-    # 策略参数
-    initDays = 10           # 初始化数据所用的天数
-    fixedSize = 1           # 每次交易的数量
+    # PolicyParameter
+    initDays = 10           # TheNumberOfDaysToInitializeTheData
+    fixedSize = 1           # NumberOfTransactionsPerTransaction
 
-    # 策略变量
-    signalPos = {}          # 信号仓位
+    # StrategyVariable
+    signalPos = {}          # SignalPosition
     
-    # 参数列表，保存了参数的名称
+    # ListOfParametersSaveTheNameOfTheParameter
     paramList = ['name',
                  'className',
                  'author',
                  'vtSymbol']    
 
-    # 变量列表，保存了变量的名称
+    # List of variables, the name of the variable is saved
     varList = ['inited',
                'trading',
                'pos',
                'signalPos',
                'targetPos']
 
-    # 同步列表，保存了需要保存到数据库的变量名称
+    # Synchronize the list and save the name of the variable that needs to be saved to the database
     syncList = ['pos']
 
     #----------------------------------------------------------------------
@@ -185,10 +185,10 @@ class MultiSignalStrategy(TargetPosTemplate):
         
     #----------------------------------------------------------------------
     def onInit(self):
-        """初始化策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略初始化' %self.name)
+        """Initialization strategy (must be implemented by user inheritance)"""
+        self.writeCtaLog(u'%s PolicyInitialization' %self.name)
 
-        # 载入历史数据，并采用回放计算的方式初始化策略数值
+        # Load historical data and initialize strategy values ​​using playback calculations
         initData = self.loadBar(self.initDays)
         for bar in initData:
             self.onBar(bar)
@@ -197,19 +197,19 @@ class MultiSignalStrategy(TargetPosTemplate):
 
     #----------------------------------------------------------------------
     def onStart(self):
-        """启动策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略启动' %self.name)
+        """Startup policy (must be implemented by user inheritance)"""
+        self.writeCtaLog(u'%s PolicyStartup' %self.name)
         self.putEvent()
 
     #----------------------------------------------------------------------
     def onStop(self):
-        """停止策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略停止' %self.name)
+        """Stop policy (must be implemented by user inheritance)"""
+        self.writeCtaLog(u'%s StrategyStop' %self.name)
         self.putEvent()
 
     #----------------------------------------------------------------------
     def onTick(self, tick):
-        """收到行情TICK推送（必须由用户继承实现）"""
+        """Received market TICK push (must be implemented by user inheritance)"""
         super(MultiSignalStrategy, self).onTick(tick)
         
         self.rsiSignal.onTick(tick)
@@ -220,7 +220,7 @@ class MultiSignalStrategy(TargetPosTemplate):
         
     #----------------------------------------------------------------------
     def onBar(self, bar):
-        """收到Bar推送（必须由用户继承实现）"""
+        """Received a Bar push (must be implemented by the user)"""
         super(MultiSignalStrategy, self).onBar(bar)
         
         self.rsiSignal.onBar(bar)
@@ -231,7 +231,7 @@ class MultiSignalStrategy(TargetPosTemplate):
         
     #----------------------------------------------------------------------
     def calculateTargetPos(self):
-        """计算目标仓位"""
+        """CalculateTheTargetPosition"""
         self.signalPos['rsi'] = self.rsiSignal.getSignalPos()
         self.signalPos['cci'] = self.cciSignal.getSignalPos()
         self.signalPos['ma'] = self.maSignal.getSignalPos()
@@ -244,15 +244,15 @@ class MultiSignalStrategy(TargetPosTemplate):
         
     #----------------------------------------------------------------------
     def onOrder(self, order):
-        """收到委托变化推送（必须由用户继承实现）"""
+        """Received a delegate change push (must be implemented by the user)"""
         super(MultiSignalStrategy, self).onOrder(order)
 
     #----------------------------------------------------------------------
     def onTrade(self, trade):
-        # 发出状态更新事件
+        # IssueAStatusUpdateEvent
         self.putEvent()
 
     #----------------------------------------------------------------------
     def onStopOrder(self, so):
-        """停止单推送"""
+        """StopSinglePush"""
         pass

@@ -1,10 +1,10 @@
 # encoding: UTF-8
 
 """
-对接天勤行情的网关接口，可以提供国内期货的报价/K线/Tick序列等数据的实时推送和历史仿真
-使用时需要在本机先启动一个天勤终端进程
-天勤行情终端: http://www.tq18.cn
-天勤接口文档: http://doc.tq18.cn/tq/latest/extension/wsapi/index.html
+The gateway interface for docking the Tianqin market can provide real-time push and historical simulation of domestic futures quotation/K line/Tick sequence data.
+When using, you need to start a Tianqin terminal process in this machine first.
+Tianqin Quotes Terminal: http://www.tq18.cn
+Tianqin interface documentation: http://doc.tq18.cn/tq/latest/extension/wsapi/index.html
 """
 from __future__ import print_function
 

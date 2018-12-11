@@ -1,26 +1,26 @@
 # encoding: UTF-8
 
 '''
-Black76期权定价模型，主要用于标的物为期货的欧式期权的定价
+Black76 option pricing model, mainly used for pricing European options with futures as futures
 
-变量说明
-f：标的物期货价格
-k：行权价
-r：无风险利率
-t：剩余到期时间（年）
-v：隐含波动率
-cp：期权类型，+1/-1对应call/put
-price：期权价格
+Variable description
+f: subject matter futures price
+k: exercise price
+r: risk free rate
+t: remaining expiration time (year)
+v: implied volatility
+Cp: ​​option type, +1/-1 corresponds to call/put
+Price: option price
 
-出于开发演示的目的，本文件中的希腊值计算基于简单数值差分法，
-运算效率一般，实盘中建议使用更高速的算法。
+For the purpose of developing demonstrations, the Greek value calculation in this document is based on a simple numerical difference method.
+The computational efficiency is general, and a higher speed algorithm is recommended in the real disk.
 
-本文件中的希腊值计算结果没有采用传统的模型价格数值，而是采用
-了实盘交易中更为实用的百分比变动数值，具体定义如下
-delta：当f变动1%时，price的变动
-gamma：当f变动1%时，delta的变动
-theta：当t变动1天时，price的变动（国内交易日每年240天）
-vega：当v涨跌1个点时，price的变动（如从16%涨到17%）
+The Greek value calculation results in this document do not use the traditional model price values, but instead
+A more practical percentage change in real trading, as defined below
+Delta: price change when f changes by 1%
+Gamma: change of delta when f changes by 1%
+Theta: price change when t changes 1 day (240 days per year on domestic trading day)
+Vega: When v goes up and down 1 point, the price changes (such as from 16% to 17%)
 '''
 
 from __future__ import division

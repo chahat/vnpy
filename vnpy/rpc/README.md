@@ -1,19 +1,19 @@
 # vn.rpc
 
-### 简介
+###Introduction
 
-提供跨进程服务调用的RPC模块，同时支持服务端向客户端的主动数据推送，用于实现vn.py框架下模块的多进程解耦。
+Provides RPC modules for cross-process service calls, and supports active data push from the server to the client for implementing multi-process decoupling of modules under the vn.py framework.
 
-### 说明
+### Description
 
-1. 使用zmq作为底层通讯库
+1. Use zmq as the underlying communication library
 
-2. 目前支持两种数据序列化方案：msgpack（默认）和json，用户在RpcObject中可以自行添加其他方案
+2. Currently supports two data serialization schemes: msgpack (default) and json. Users can add other schemes themselves in RpcObject.
 
-3. 客户端和服务端通过REQ-REP模式实现跨进程服务调用
+3. The client and server implement cross-process service calls through the REQ-REP mode.
 
-4. 客户端和服务端通过SUB-PUB模式实现主动数据推送
+4. Client and server implement active data push through SUB-PUB mode
 
-5. RpcClient的send和RpcServer的publish函数不是多线程安全的，在多线程中使用时需要用户自行加锁，否则可能导致zmq底层崩溃
+5. RPCClient's send and RpcServer's publish function are not multi-thread safe. Users need to lock themselves when using in multi-threading, otherwise it may cause the bottom of zmq to crash.
 
-6. 考虑到vn.rpc的主要应用场景是本机多进程或者局域网内分布式架构，网络可靠性较高，因此没有在模块中提供心跳功能，用户可以视乎自己的需求添加
+6. Considering that the main application scenario of vn.rpc is native multi-process or distributed architecture in the LAN, the network reliability is high, so the heartbeat function is not provided in the module, and the user can add according to his own needs.

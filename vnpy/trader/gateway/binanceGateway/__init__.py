@@ -5,6 +5,6 @@ from .binanceGateway import BinanceGateway
 
 gatewayClass = BinanceGateway
 gatewayName = 'BINANCE'
-gatewayDisplayName = u'币安'
+gatewayDisplayName = 'BINANCE'
 gatewayType = vtConstant.GATEWAYTYPE_BTC
 gatewayQryEnabled = True

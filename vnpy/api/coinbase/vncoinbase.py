@@ -30,7 +30,7 @@ WEBSOCKET_HOST = 'wss://ws-feed-public.sandbox.pro.coinbase.com'
 
 ########################################################################
 class CoinbaseRestApi(object):
-    """REST API"""
+    """REST API EXCHANGE"""
 
     #----------------------------------------------------------------------
     def __init__(self):
@@ -44,7 +44,7 @@ class CoinbaseRestApi(object):
         self.reqid = 0
         self.queue = Queue()
         self.pool = None
-        self.sessionDict = {}   # 会话对象字典
+        self.sessionDict = {}   # SessionObjectDictionary
         
         self.header = {
             'Content-Type': 'Application/JSON'
@@ -52,7 +52,7 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def init(self, apiKey, secretKey, passphrase):
-        """初始化"""
+        """initialization"""
         self.apiKey = apiKey
         self.secretKey = secretKey
         self.passphrase = passphrase
@@ -61,7 +61,7 @@ class CoinbaseRestApi(object):
         
     #----------------------------------------------------------------------
     def start(self, n=10):
-        """启动"""
+        """start"""
         if self.active:
             return
         
@@ -71,7 +71,7 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def close(self):
-        """关闭"""
+        """close"""
         self.active = False
         
         if self.pool:
@@ -80,7 +80,7 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def addReq(self, method, path, callback, params=None, postdict=None):
-        """添加请求"""
+        """AddRequest"""
         self.reqid += 1
         req = (method, path, callback, params, postdict, self.reqid)
         self.queue.put(req)
@@ -88,7 +88,7 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def processReq(self, req, i):
-        """处理请求"""
+        """processingRequest"""
         method, path, callback, params, postdict, reqid = req
         url = REST_HOST + path
         timestamp = str(time())
@@ -105,7 +105,7 @@ class CoinbaseRestApi(object):
         header['CB-ACCESS-TIMESTAMP'] = timestamp
         header['CB-ACCESS-SIGN'] = self.generateSignature(method, path, timestamp, params, body=p.body)
         
-        # 使用长连接的session，比短连接的耗时缩短80%
+        # Using a long-connected session is 80% shorter than a short connection
         session = self.sessionDict[i]
         if postdict:
             resp = session.request(method, url, headers=header, params=params, data=json.dumps(postdict))
@@ -124,7 +124,7 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def run(self, i):
-        """连续运行"""
+        """ContinueToOperate"""
         self.sessionDict[i] = requests.Session()
         
         while self.active:
@@ -136,8 +136,8 @@ class CoinbaseRestApi(object):
 
     #----------------------------------------------------------------------
     def generateSignature(self, method, path, timestamp, params=None, body=None):
-        """生成签名"""
-        # 对params在HTTP报文路径中，以请求字段方式序列化
+        """generateSignature"""
+        # Serialize the params in the HTTP message path in the form of a request field
         if params:
             query = urlencode(sorted(params.items()))
             path = path + '?' + query
@@ -153,13 +153,13 @@ class CoinbaseRestApi(object):
     
     #----------------------------------------------------------------------
     def onError(self, code, error):
-        """错误回调"""
+        """errorCallback"""
         print('on error')
         print(code, error)
     
     #----------------------------------------------------------------------
     def onData(self, data, reqid):
-        """通用回调"""
+        """universalCallback"""
         print('on data')
         print(data, reqid)
 
@@ -177,7 +177,7 @@ class CoinbaseWebsocketApi(object):
     
     #----------------------------------------------------------------------
     def start(self):
-        """启动"""
+        """start"""
         self.ws = websocket.create_connection(WEBSOCKET_HOST,
                                               sslopt={'cert_reqs': ssl.CERT_NONE})
     
@@ -189,7 +189,7 @@ class CoinbaseWebsocketApi(object):
     
     #----------------------------------------------------------------------
     def reconnect(self):
-        """重连"""
+        """reconnection"""
         self.ws = websocket.create_connection(WEBSOCKET_HOST,
                                               sslopt={'cert_reqs': ssl.CERT_NONE})   
         
@@ -197,7 +197,7 @@ class CoinbaseWebsocketApi(object):
         
     #----------------------------------------------------------------------
     def run(self):
-        """运行"""
+        """run"""
         while self.active:
             try:
                 stream = self.ws.recv()
@@ -210,7 +210,7 @@ class CoinbaseWebsocketApi(object):
     
     #----------------------------------------------------------------------
     def close(self):
-        """关闭"""
+        """closed"""
         self.active = False
         
         if self.thread:
@@ -218,12 +218,12 @@ class CoinbaseWebsocketApi(object):
         
     #----------------------------------------------------------------------
     def onConnect(self):
-        """连接回调"""
+        """connectionCallback"""
         print('connected')
     
     #----------------------------------------------------------------------
     def onData(self, data):
-        """数据回调"""
+        """dataCallback"""
         print('-' * 30)
         l = data.keys()
         l.sort()

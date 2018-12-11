@@ -1,22 +1,22 @@
 # vn.ksgold
 
-### 简介
-金仕达黄金T+D接口（浦发银行）的Python封装，需要把SLEdll文件夹复制到python.exe所在的文件夹下才可以使用。
+### Introduction
+The Python package of Kingstar Gold T+D interface (SPD) needs to copy the SLEdll folder to the folder where python.exe is located.
 
-### 说明
-本接口看起来和CTP类似很简单，其实坑相当多：
-1. 有每秒最多5笔操作的流控（作者测试似乎3笔就会触发流控），同时似乎底层采用的是同步模式，意味着如果用户调用委托函数遭遇流控限制，则在委托等待的过程中当前线程会阻塞，导致程序出现界面卡死的情况（因为主线程被卡住了）
+### Description
+This interface looks very simple like CTP, but there are quite a lot of pits:
+1. Flow control with up to 5 operations per second (authors seem to trigger flow control with 3 strokes), and it seems that the underlying mode is synchronous, meaning that if the user invokes the delegate function to encounter flow control restrictions, then the delegate waits The current thread will block during the process, causing the program to be stuck in the interface (because the main thread is stuck)
 
-2. OnRtnOrder返回的数据字段极少，仅包括委托号和当前状态，且仅在委托下达和委托撤销时会推送，委托成交时没有推送，需要用户自己结合OnRtnTrade的数据还原当前委托的最新状态
+2. OnRtnOrder returns very few data fields, including only the commission number and the current state, and will only be pushed when the commission is released and the delegate is revoked. The commission is not pushed when the transaction is completed. The user needs to combine the data of OnRtnTrade to restore the latest status of the current commission.
 
-3. 登录后不提供当日历史成交和委托的主动推送，需要用户自行查询，查询还有流控（1秒/次）
+3. After login, the historical transaction and the delegate's active push will not be provided. Users need to query it themselves, and the query also has flow control (1 second/time).
 
-如果打算自己开发建议参考vn.trader里的ksgoldGateway，可以少踩点坑。
+If you plan to develop your own recommendations to refer to ksgoldGateway in vn.trader, you can step on the pit.
 
-### API版本
+### API version
 
-日期：2014-07-21
+Date: 2014-07-21
 
-名称：api发布_20140721（黄金交易员应用程序接口）
+Name: api release _20140721 (golden trader application interface)
 
-来源：浦发银行技术部门提供
+Source: Provided by Shanghai Pudong Development Bank Technology Department

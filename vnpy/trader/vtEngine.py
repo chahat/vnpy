@@ -23,53 +23,53 @@ from vnpy.trader.vtFunction import getTempPath
 
 ########################################################################
 class MainEngine(object):
-    """主引擎"""
+    """MainEngine"""
 
     #----------------------------------------------------------------------
     def __init__(self, eventEngine):
         """Constructor"""
-        # 记录今日日期
+        # RecordTodaySDate
         self.todayDate = datetime.now().strftime('%Y%m%d')
         
-        # 绑定事件引擎
+        # BindingEventEngine
         self.eventEngine = eventEngine
         self.eventEngine.start()
         
-        # 创建数据引擎
+        # CreateADataEngine
         self.dataEngine = DataEngine(self.eventEngine)
         
-        # MongoDB数据库相关
+        # MongoDB Database related
         self.dbClient = None    # MongoDB客户端对象
         
-        # 接口实例
+        # InterfaceInstance
         self.gatewayDict = OrderedDict()
         self.gatewayDetailList = []
         
-        # 应用模块实例
+        # ApplicationModuleInstance
         self.appDict = OrderedDict()
         self.appDetailList = []
         
-        # 风控引擎实例（特殊独立对象）
+        # Wind control engine instance (special independent object)
         self.rmEngine = None
         
-        # 日志引擎实例
+        # Log engine instance
         self.logEngine = None
         self.initLogEngine()
 
     #----------------------------------------------------------------------
     def addGateway(self, gatewayModule):
-        """添加底层接口"""
+        """Add the underlying interface"""
         gatewayName = gatewayModule.gatewayName
         
-        # 创建接口实例
+        # CreateAnInterfaceInstance
         self.gatewayDict[gatewayName] = gatewayModule.gatewayClass(self.eventEngine, 
                                                                    gatewayName)
         
-        # 设置接口轮询
+        # Set interface polling
         if gatewayModule.gatewayQryEnabled:
             self.gatewayDict[gatewayName].setQryEnabled(gatewayModule.gatewayQryEnabled)
                 
-        # 保存接口详细信息
+        # Save interface details
         d = {
             'gatewayName': gatewayModule.gatewayName,
             'gatewayDisplayName': gatewayModule.gatewayDisplayName,
@@ -79,16 +79,16 @@ class MainEngine(object):
         
     #----------------------------------------------------------------------
     def addApp(self, appModule):
-        """添加上层应用"""
+        """Add upper application"""
         appName = appModule.appName
         
-        # 创建应用实例
+        # Create an application instance
         self.appDict[appName] = appModule.appEngine(self, self.eventEngine)
         
-        # 将应用引擎实例添加到主引擎的属性中
+        # Add an application engine instance to the properties of the main engine
         self.__dict__[appName] = self.appDict[appName]
         
-        # 保存应用信息
+        # Save app information
         d = {
             'appName': appModule.appName,
             'appDisplayName': appModule.appDisplayName,
@@ -126,8 +126,8 @@ class MainEngine(object):
   
     #----------------------------------------------------------------------
     def sendOrder(self, orderReq, gatewayName):
-        """对特定接口发单"""
-        # 如果创建了风控引擎，且风控检查失败则不发单
+        """Billing for a specific interface"""
+        # If the wind control engine is created and the risk control check fails, no bill will be issued.
         if self.rmEngine and not self.rmEngine.checkRisk(orderReq, gatewayName):
             return ''
 
@@ -135,7 +135,7 @@ class MainEngine(object):
         
         if gateway:
             vtOrderID = gateway.sendOrder(orderReq)
-            self.dataEngine.updateOrderReq(orderReq, vtOrderID)     # 更新发出的委托请求到数据引擎中
+            self.dataEngine.updateOrderReq(orderReq, vtOrderID)     # Update the issued delegate request to the data engine
             return vtOrderID
         else:
             return ''

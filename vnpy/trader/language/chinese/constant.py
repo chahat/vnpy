@@ -56,7 +56,7 @@ PRICETYPE_FOK = u'FOK'
 OPTION_CALL = u'看涨期权'
 OPTION_PUT = u'看跌期权'
 
-# 交易所类型
+# ExchangeType
 EXCHANGE_SSE = 'SSE'       # 上交所
 EXCHANGE_SZSE = 'SZSE'     # 深交所
 EXCHANGE_CFFEX = 'CFFEX'   # 中金所

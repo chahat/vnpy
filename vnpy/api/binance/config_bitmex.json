@@ -1,0 +1,11 @@
+{
+	"MONGO_HOST": "localhost",
+	"MONGO_PORT": 27017,
+	"SYMBOLS": "BITMEX_FUTURES_XBT_USD",
+	"DATE": "20111231"
+
+	stopped here .. investigatw why
+	('query start %s', '2015-12-12T05:40:00.000000Z')
+('query start %s', '2015-12-12T05:40:00.000000Z')
+('query start %s', '2015-12-12T05:40:00.000000Z')
+}

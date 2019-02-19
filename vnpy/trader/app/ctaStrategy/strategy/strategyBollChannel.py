@@ -32,11 +32,11 @@ class BollChannelStrategy(CtaTemplate):
     author = u'用Python的交易员'
 
     # 策略参数
-    bollWindow = 18                     # 布林通道窗口数
-    bollDev = 3.4                       # 布林通道的偏差
+    bollWindow = 18                     # Boolean channel window number
+    bollDev = 3.4                       # Deviation of the Bollinger channel
     cciWindow = 10                      # CCI窗口数
     atrWindow = 30                      # ATR窗口数
-    slMultiplier = 5.2                  # 计算止损距离的乘数
+    slMultiplier = 5.2                  # Calculate the multiplier of the stop loss distance
     initDays = 10                       # 初始化数据所用的天数
     fixedSize = 1                       # 每次交易的数量
 
@@ -93,7 +93,7 @@ class BollChannelStrategy(CtaTemplate):
     #----------------------------------------------------------------------
     def onInit(self):
         """初始化策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略初始化' %self.name)
+        self.writeCtaLog(u'%s policy initialization' %self.name)
         
         # 载入历史数据，并采用回放计算的方式初始化策略数值
         initData = self.loadBar(self.initDays)
@@ -105,13 +105,13 @@ class BollChannelStrategy(CtaTemplate):
     #----------------------------------------------------------------------
     def onStart(self):
         """启动策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略启动' %self.name)
+        self.writeCtaLog(u'%s policy started' %self.name)
         self.putEvent()
 
     #----------------------------------------------------------------------
     def onStop(self):
         """停止策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'%s策略停止' %self.name)
+        self.writeCtaLog(u'%s policy stopped' %self.name)
         self.putEvent()
 
     #----------------------------------------------------------------------

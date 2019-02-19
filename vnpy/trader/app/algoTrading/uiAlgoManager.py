@@ -30,10 +30,10 @@ class StopButton(QtWidgets.QPushButton):
         self.setStyleSheet("color:black;background-color:yellow")
         
         if algoName:
-            self.setText(u'停止')
+            self.setText(u'Stop')
             self.clicked.connect(self.stopAlgo)
         else:
-            self.setText(u'停止全部算法')
+            self.setText(u'StopAllAlgorithms')
             self.clicked.connect(self.stopAll)
     
     #----------------------------------------------------------------------
@@ -84,9 +84,9 @@ class AlgoStatusMonitor(QtWidgets.QTableWidget):
     def initUi(self):
         """初始化界面"""
         labels = [u'',
-                  u'名称',
-                  u'参数',
-                  u'变量']
+                  u'Name',
+                  u'Parameter',
+                  u'Variable']
         
         self.setColumnCount(len(labels))
         self.setHorizontalHeaderLabels(labels)
@@ -217,7 +217,7 @@ class AlgoLogMonitor(QtWidgets.QTextEdit):
         """"""
         log = event.dict_['data']
         if not log.gatewayName:
-            log.gatewayName = u'算法引擎'
+            log.gatewayName = u'AlgorithmEngine'
         msg = u'%s\t%s：%s' %(log.logTime, log.gatewayName, log.logContent)
         self.append(msg)
 
@@ -235,7 +235,7 @@ class StartButton(QtWidgets.QPushButton):
         self.setting = setting
         
         self.setStyleSheet("color:black;background-color:green")
-        self.setText(u'启动')
+        self.setText(u'Start')
         
         self.clicked.connect(self.startAlgo)
         
@@ -263,7 +263,7 @@ class DeleteButton(QtWidgets.QPushButton):
         self.setting = setting
         
         self.setStyleSheet("color:black;background-color:red")
-        self.setText(u'删除')
+        self.setText(u'Delete')
         
         self.clicked.connect(self.deleteAlgoSetting)
         
@@ -301,9 +301,9 @@ class AlgoSettingMonitor(QtWidgets.QTableWidget):
         """初始化界面"""
         labels = ['',
                   '',
-                  u'名称',
-                  u'算法',
-                  u'参数']
+                  u'Name',
+                  u'Algorithm',
+                  u'Parameter']
         
         self.setColumnCount(len(labels))
         self.setHorizontalHeaderLabels(labels)
@@ -395,7 +395,7 @@ class AlgoManager(QtWidgets.QWidget):
     #----------------------------------------------------------------------
     def initUi(self):
         """"""
-        self.setWindowTitle(u'算法交易')
+        self.setWindowTitle(u'AlgorithmicTrading')
         
         #buttonWidth = 400
         #buttonHeight = 60        
@@ -416,22 +416,22 @@ class AlgoManager(QtWidgets.QWidget):
         
         self.buttonStop = StopButton(self.algoEngine)
         
-        self.buttonAddAlgo = QtWidgets.QPushButton(u'启动篮子算法')
+        self.buttonAddAlgo = QtWidgets.QPushButton(u'StartBasketAlgorithm')
         self.buttonAddAlgo.setStyleSheet("color:white;background-color:green")
         self.buttonAddAlgo.clicked.connect(self.addAlgoFromCsv)
         
-        self.buttonSaveSetting = QtWidgets.QPushButton(u'加载算法配置')
+        self.buttonSaveSetting = QtWidgets.QPushButton(u'LoadAlgorithmConfiguration')
         self.buttonSaveSetting.setStyleSheet("color:white;background-color:blue")
         self.buttonSaveSetting.clicked.connect(self.saveSettingFromCsv)
         
         self.lineRepPort = QtWidgets.QLineEdit('8899')
         self.linePubPort = QtWidgets.QLineEdit('9988')
         
-        self.buttonStartRpc = QtWidgets.QPushButton(u'启动RPC服务')
+        self.buttonStartRpc = QtWidgets.QPushButton(u'StartRPCService')
         self.buttonStartRpc.setStyleSheet("color:black;background-color:orange")
         self.buttonStartRpc.clicked.connect(self.startRpc)
         
-        label = QtWidgets.QLabel(u'算法类型')
+        label = QtWidgets.QLabel(u'AlgorithmType')
         label.setFixedWidth(100)
         
         hbox = QtWidgets.QHBoxLayout()
@@ -439,9 +439,9 @@ class AlgoManager(QtWidgets.QWidget):
         hbox.addWidget(self.comboTemplate)
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(QtWidgets.QLabel(u'REP端口'), 0, 0)
+        grid.addWidget(QtWidgets.QLabel(u'REPPort'), 0, 0)
         grid.addWidget(self.lineRepPort, 0, 1)
-        grid.addWidget(QtWidgets.QLabel(u'PUB端口'), 1, 0)
+        grid.addWidget(QtWidgets.QLabel(u'PUBPort'), 1, 0)
         grid.addWidget(self.linePubPort, 1, 1)
         
         vbox1 = QtWidgets.QVBoxLayout()
@@ -463,14 +463,14 @@ class AlgoManager(QtWidgets.QWidget):
         settingMonitor = AlgoSettingMonitor(self.algoEngine)
         
         tab1 = QtWidgets.QTabWidget()
-        tab1.addTab(workingMonitor, u'运行中')
-        tab1.addTab(historyMonitor, u'已结束')
+        tab1.addTab(workingMonitor, u'Running')
+        tab1.addTab(historyMonitor, u'Over')
         
         tab2 = QtWidgets.QTabWidget()
-        tab2.addTab(logMonitor, u'日志信息')
+        tab2.addTab(logMonitor, u'LogInformation')
         
         tab3 = QtWidgets.QTabWidget()
-        tab3.addTab(settingMonitor, u'算法配置')
+        tab3.addTab(settingMonitor, u'AlgorithmConfiguration')
         
         hbox = QtWidgets.QHBoxLayout()
         hbox.addWidget(tab2)
@@ -522,13 +522,13 @@ class AlgoManager(QtWidgets.QWidget):
         
         except:
             msg = traceback.format_exc()
-            self.algoEngine.writeLog(u'读取CSV文件失败：\n' + msg)
+            self.algoEngine.writeLog(u'FailedToReadCSVFile：\n' + msg)
             return []
     
     #----------------------------------------------------------------------
     def saveSettingFromCsv(self):
         """从CSV加载配置到数据库"""
-        path, fileType = QtWidgets.QFileDialog.getOpenFileName(self, u'加载算法配置', '', 'CSV(*.csv)')
+        path, fileType = QtWidgets.QFileDialog.getOpenFileName(self, u'LoadAlgorithmConfiguration', '', 'CSV(*.csv)')
         l = self.loadCsv(path)
         for setting in l:
             self.algoEngine.saveAlgoSetting(setting)
@@ -536,7 +536,7 @@ class AlgoManager(QtWidgets.QWidget):
     #----------------------------------------------------------------------
     def addAlgoFromCsv(self):
         """从CSV启动一篮子算法"""
-        path, fileType = QtWidgets.QFileDialog.getOpenFileName(self, u'启动篮子算法', '', 'CSV(*.csv)        ')
+        path, fileType = QtWidgets.QFileDialog.getOpenFileName(self, u'StartBasketAlgorithm', '', 'CSV(*.csv)        ')
         l = self.loadCsv(path)
         for setting in l:
             self.algoEngine.addAlgo(setting)
@@ -548,7 +548,7 @@ class AlgoManager(QtWidgets.QWidget):
             repPort = int(self.lineRepPort.text())
             pubPort = int(self.linePubPort.text())
         except:
-            self.algoEngine.writeLog(u'请检查RPC端口，只能使用整数')
+            self.algoEngine.writeLog(u'PleaseCheckTheRPCPortOnlyUseIntegers')
             return
         
         self.algoEngine.startRpc(repPort, pubPort)

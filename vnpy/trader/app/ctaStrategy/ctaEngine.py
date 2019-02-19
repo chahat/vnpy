@@ -139,7 +139,7 @@ class CtaEngine(AppEngine):
             self.strategyOrderDict[strategy.name].add(vtOrderID)                         # 添加到策略委托号集合中
             vtOrderIDList.append(vtOrderID)
             
-        self.writeCtaLog(u'策略%s发送委托，%s，%s，%s@%s' 
+        self.writeCtaLog(u'Policy %s send delegate，%s，%s，%s@%s'
                          %(strategy.name, vtSymbol, req.direction, volume, price))
         
         return vtOrderIDList
@@ -449,7 +449,7 @@ class CtaEngine(AppEngine):
             
             self.mainEngine.subscribe(req, contract.gatewayName)
         else:
-            self.writeCtaLog(u'%s的交易合约%s无法找到' %(strategy.name, strategy.vtSymbol))
+            self.writeCtaLog(u'%s trading contract %s could not be found' %(strategy.name, strategy.vtSymbol))
 
     #----------------------------------------------------------------------
     def initStrategy(self, name):
@@ -464,9 +464,9 @@ class CtaEngine(AppEngine):
                 self.loadSyncData(strategy)                             # 初始化完成后加载同步数据
                 self.subscribeMarketData(strategy)                      # 加载同步数据后再订阅行情
             else:
-                self.writeCtaLog(u'请勿重复初始化策略实例：%s' %name)
+                self.writeCtaLog(u'Do not repeat the initialization policy instance：%s' %name)
         else:
-            self.writeCtaLog(u'策略实例不存在：%s' %name)        
+            self.writeCtaLog(u'Policy instance does not exist：%s' %name)
 
     #---------------------------------------------------------------------
     def startStrategy(self, name):
@@ -478,7 +478,7 @@ class CtaEngine(AppEngine):
                 strategy.trading = True
                 self.callStrategyFunc(strategy, strategy.onStart)
         else:
-            self.writeCtaLog(u'策略实例不存在：%s' %name)
+            self.writeCtaLog(u'Policy instance does not exist：%s' %name)
     
     #----------------------------------------------------------------------
     def stopStrategy(self, name):
@@ -500,7 +500,7 @@ class CtaEngine(AppEngine):
                     if so.strategy is strategy:
                         self.cancelStopOrder(stopOrderID)   
         else:
-            self.writeCtaLog(u'策略实例不存在：%s' %name)    
+            self.writeCtaLog(u'Policy instance does not exist：%s' %name)
             
     #----------------------------------------------------------------------
     def initAll(self):
@@ -556,7 +556,7 @@ class CtaEngine(AppEngine):
             
             return varDict
         else:
-            self.writeCtaLog(u'策略实例不存在：' + name)    
+            self.writeCtaLog(u'Policy instance does not exist：' + name)
             return None
     
     #----------------------------------------------------------------------
@@ -571,7 +571,7 @@ class CtaEngine(AppEngine):
             
             return paramDict
         else:
-            self.writeCtaLog(u'策略实例不存在：' + name)    
+            self.writeCtaLog(u'Policy instance does not exist：' + name)
             return None
     
     #----------------------------------------------------------------------
@@ -609,7 +609,7 @@ class CtaEngine(AppEngine):
             strategy.inited = False
             
             # 发出日志
-            content = '\n'.join([u'策略%s触发异常已停止' %strategy.name,
+            content = '\n'.join([u'Policy %s triggered exception has stopped' %strategy.name,
                                 traceback.format_exc()])
             self.writeCtaLog(content)
             
@@ -626,7 +626,7 @@ class CtaEngine(AppEngine):
         self.mainEngine.dbUpdate(POSITION_DB_NAME, strategy.className,
                                  d, flt, True)
         
-        content = u'策略%s同步数据保存成功，当前持仓%s' %(strategy.name, strategy.pos)
+        content = u'Strategy %s synchronization data saved successfully, current position %s' %(strategy.name, strategy.pos)
         self.writeCtaLog(content)
     
     #----------------------------------------------------------------------

@@ -21,7 +21,7 @@ STATUS_FINISHED = set([STATUS_ALLTRADED, STATUS_CANCELLED, STATUS_REJECTED])
 class BlAlgo(AlgoTemplate):
     """最优限价单算法"""
     
-    templateName = u'BestLimit 最优限价'
+    templateName = 'BestLimit'
 
     #----------------------------------------------------------------------
     def __init__(self, engine, setting, algoName):
@@ -95,27 +95,27 @@ class BlAlgo(AlgoTemplate):
     #----------------------------------------------------------------------
     def onStop(self):
         """"""
-        self.writeLog(u'停止算法')
+        self.writeLog('Stop algorithm')
         self.varEvent()
         
     #----------------------------------------------------------------------
     def varEvent(self):
         """更新变量"""
         d = OrderedDict()
-        d[u'算法状态'] = self.active
-        d[u'委托价格'] = self.orderPrice
-        d[u'委托号'] = self.vtOrderID
-        d[u'成交数量'] = self.tradedVolume
+        d['active'] = self.active
+        d['orderPrice'] = self.orderPrice
+        d['vtOrderId'] = self.vtOrderID
+        d['tradedVolume'] = self.tradedVolume
         self.putVarEvent(d)
     
     #----------------------------------------------------------------------
     def paramEvent(self):
         """更新参数"""
         d = OrderedDict()
-        d[u'代码'] = self.vtSymbol
-        d[u'方向'] = self.direction
-        d[u'数量'] = self.volume
-        d[u'开平'] = self.offset
+        d['vtSymbol'] = self.vtSymbol
+        d['direction'] = self.direction
+        d['volume'] = self.volume
+        d['offset'] = self.offset
         self.putParamEvent(d)
     
     #----------------------------------------------------------------------
@@ -166,20 +166,20 @@ class BlWidget(AlgoWidget):
         self.comboOffset.addItems(['', OFFSET_OPEN, OFFSET_CLOSE])
         self.comboOffset.setCurrentIndex(0)
         
-        buttonStart = QtWidgets.QPushButton(u'启动')
+        buttonStart = QtWidgets.QPushButton('Start')
         buttonStart.clicked.connect(self.addAlgo)
         buttonStart.setMinimumHeight(100)
         
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineVtSymbol, 0, 1)
-        grid.addWidget(Label(u'方向'), 1, 0)
+        grid.addWidget(Label('direction'), 1, 0)
         grid.addWidget(self.comboDirection, 1, 1)
-        grid.addWidget(Label(u'数量'), 2, 0)
+        grid.addWidget(Label('volume'), 2, 0)
         grid.addWidget(self.lineVolume, 2, 1)
-        grid.addWidget(Label(u'开平'), 3, 0)
+        grid.addWidget(Label('offset'), 3, 0)
         grid.addWidget(self.comboOffset, 3, 1)
         
         return grid

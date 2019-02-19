@@ -128,7 +128,7 @@ class AlgoEngine(object):
         """"""
         contract = self.mainEngine.getContract(vtSymbol)
         if not contract:
-            self.writeLog(u'%s订阅行情失败，找不到合约%s' %(algo.algoName, vtSymbol))
+            self.writeLog(u'%s Subscription failed, cant find contract %s' %(algo.algoName, vtSymbol))
             return        
 
         # 如果vtSymbol已存在于字典，说明已经订阅过
@@ -153,7 +153,7 @@ class AlgoEngine(object):
         """发单"""
         contract = self.mainEngine.getContract(vtSymbol)
         if not contract:
-            self.writeLog(u'%s委托下单失败，找不到合约：%s' %(algo.algoName, vtSymbol))
+            self.writeLog(u'%s Delegate order failed cant find contract：%s' %(algo.algoName, vtSymbol))
 
         req = VtOrderReq()
         req.vtSymbol = vtSymbol
@@ -194,7 +194,7 @@ class AlgoEngine(object):
         """撤单"""
         order = self.mainEngine.getOrder(vtOrderID)
         if not order:
-            self.writeLog(u'%s委托撤单失败，找不到委托：%s' %(algo.algoName, vtOrderID))
+            self.writeLog(u'%s Entrusted to cancel the order failed, can not find the commission：%s' %(algo.algoName, vtOrderID))
             return
 
         req = VtCancelOrderReq()
@@ -274,7 +274,7 @@ class AlgoEngine(object):
         """查询行情"""
         tick = self.mainEngine.getTick(vtSymbol)
         if not tick:
-            self.writeLog(u'%s查询行情失败，找不到报价：%s' %(algo.algoName, vtSymbol))
+            self.writeLog(u'%s The query failed, the quote could not be found.：%s' %(algo.algoName, vtSymbol))
             return            
             
         return tick
@@ -284,7 +284,7 @@ class AlgoEngine(object):
         """查询合约"""
         contract = self.mainEngine.getContract(vtSymbol)
         if not contract:
-            self.writeLog(u'%s查询合约失败，找不到报价：%s' %(algo.algoName, vtSymbol))
+            self.writeLog(u'%s The query contract failed and the quote could not be found:%s' %(algo.algoName, vtSymbol))
             return            
         
         return contract
@@ -344,7 +344,7 @@ class AlgoEngine(object):
         
         self.rpcServer = AlgoRpcServer(self, repPort, pubPort)
         self.rpcServer.start()
-        self.writeLog(u'算法交易RPC服务启动成功，REP端口:%s，PUB端口:%s' %(repPort, pubPort))
+        self.writeLog(u'The algorithm transaction RPC service starts successfully, REP port: %s, PUB port:%s' %(repPort, pubPort))
 
 
 ########################################################################

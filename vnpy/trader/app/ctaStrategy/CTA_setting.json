@@ -1,19 +1,13 @@
 [
     {
         "name": "double ema",
-        "className": "EmaDemoStrategy",
-        "vtSymbol": "IF1706"
+        "className": "DoubleMaStrategy",
+        "vtSymbol": "XBTUSD.BITMEX"
     },
 
     {
-        "name": "atr rsi",
-        "className": "AtrRsiStrategy",
-        "vtSymbol": "IC1706"
-    },
-
-    {
-        "name": "king keltner",
-        "className": "KkStrategy",
-        "vtSymbol": "IH1706"
+        "name": "Bollinger channel",
+        "className": "BollChannelStrategy",
+        "vtSymbol": "XBTUSD.BITMEX"
     }
 ]

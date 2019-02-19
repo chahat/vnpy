@@ -10,9 +10,9 @@ from vnpy.trader.vtObject import VtBarData
 ########################################################################
 class BarGenerator(object):
     """
-    K线合成器，支持：
-    1. 基于Tick合成1分钟K线
-    2. 基于1分钟K线合成X分钟K线（X可以是2、3、5、10、15、30	）
+    K line synthesizer, supports:
+    1. Based on Tick synthesis 1 minute K line
+    2. Based on 1 minute K line synthesis X minutes K line (X can be 2, 3, 5, 10, 15, 30)
     """
 
     #----------------------------------------------------------------------

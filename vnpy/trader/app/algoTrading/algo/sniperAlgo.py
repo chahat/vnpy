@@ -161,15 +161,15 @@ class SniperWidget(AlgoWidget):
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineVtSymbol, 0, 1)
-        grid.addWidget(Label(u'方向'), 1, 0)
+        grid.addWidget(Label('direction'), 1, 0)
         grid.addWidget(self.comboDirection, 1, 1)
-        grid.addWidget(Label(u'价格'), 2, 0)
+        grid.addWidget(Label('price'), 2, 0)
         grid.addWidget(self.linePrice, 2, 1)
-        grid.addWidget(Label(u'数量'), 3, 0)
+        grid.addWidget(Label('volume'), 3, 0)
         grid.addWidget(self.lineVolume, 3, 1)
-        grid.addWidget(Label(u'开平'), 4, 0)
+        grid.addWidget(Label('offset'), 4, 0)
         grid.addWidget(self.comboOffset, 4, 1)
         
         return grid

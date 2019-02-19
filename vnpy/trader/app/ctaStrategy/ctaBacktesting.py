@@ -318,8 +318,8 @@ class BacktestingEngine(object):
         """基于最新数据撮合限价单"""
         # 先确定会撮合成交的价格
         if self.mode == self.BAR_MODE:
-            buyCrossPrice = self.bar.low        # 若买入方向限价单价格高于该价格，则会成交
-            sellCrossPrice = self.bar.high      # 若卖出方向限价单价格低于该价格，则会成交
+            buyCrossPrice = self.bar.low        # If the buy direction limit order price is higher than the price, the transaction will be completed.
+            sellCrossPrice = self.bar.high      # If the selling direction limit order price is lower than the price, the transaction will be completed.
             buyBestCrossPrice = self.bar.open   # 在当前时间点前发出的买入委托可能的最优成交价
             sellBestCrossPrice = self.bar.open  # 在当前时间点前发出的卖出委托可能的最优成交价
         else:

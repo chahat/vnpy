@@ -82,7 +82,7 @@ class BitmexGateway(VtGateway):
         except IOError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'读取连接配置出错，请检查'
+            log.logContent = u'Error reading connection configuration, please check'
             self.onLog(log)
             return
 
@@ -98,7 +98,7 @@ class BitmexGateway(VtGateway):
         except KeyError:
             log = VtLogData()
             log.gatewayName = self.gatewayName
-            log.logContent = u'连接配置缺少字段，请检查'
+            log.logContent = u'Connection configuration missing field, please check'
             self.onLog(log)
             return
 
@@ -235,7 +235,7 @@ class BitmexRestApi(RestClient):
             
         self.start(sessionCount)
         
-        self.writeLog(u'REST API启动成功')
+        self.writeLog(u'REST API Successful startup')
     
     #----------------------------------------------------------------------
     def writeLog(self, content):
@@ -321,6 +321,7 @@ class BitmexRestApi(RestClient):
         
     #----------------------------------------------------------------------
     def onSendOrder(self, data, request):
+        print('onSendOrder %s'%data)
         """"""
         pass
 
@@ -424,20 +425,20 @@ class BitmexWebsocketApi(WebsocketClient):
     #----------------------------------------------------------------------
     def onConnected(self):
         """连接回调"""
-        self.writeLog(u'Websocket API连接成功')
+        self.writeLog(u'Websocket API connection succeeded')
         self.authenticate()
     
     #----------------------------------------------------------------------
     def onDisconnected(self):
         """连接回调"""
-        self.writeLog(u'Websocket API连接断开')
+        self.writeLog(u'Websocket API Disconnect')
         self.authenticate()    
     
     #----------------------------------------------------------------------
     def onPacket(self, packet):
         """数据回调"""
         if 'error' in packet:
-            self.writeLog(u'Websocket API报错：%s' %packet['error'])
+            self.writeLog(u'Websocket API Report an error：%s' %packet['error'])
             
             if 'not valid' in packet['error']:
                 self.active = False
@@ -448,7 +449,7 @@ class BitmexWebsocketApi(WebsocketClient):
             
             if success:
                 if req['op'] == 'authKey':
-                    self.writeLog(u'Websocket API验证授权成功')
+                    self.writeLog(u'Websocket API Verify authorization is successful')
                     self.subscribe()
             
         elif 'table' in packet:

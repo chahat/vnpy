@@ -172,24 +172,24 @@ class StopWidget(AlgoWidget):
         self.spinPriceAdd.setMaximum(1000000000)
         self.spinPriceAdd.setDecimals(8)        
         
-        buttonStart = QtWidgets.QPushButton(u'启动')
+        buttonStart = QtWidgets.QPushButton(u'Start')
         buttonStart.clicked.connect(self.addAlgo)
         buttonStart.setMinimumHeight(100)
         
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineSymbol, 0, 1)
-        grid.addWidget(Label(u'方向'), 1, 0)
+        grid.addWidget(Label('direction'), 1, 0)
         grid.addWidget(self.comboDirection, 1, 1)
-        grid.addWidget(Label(u'价格'), 2, 0)
+        grid.addWidget(Label('stopPrice'), 2, 0)
         grid.addWidget(self.spinPrice, 2, 1)
-        grid.addWidget(Label(u'数量'), 3, 0)
+        grid.addWidget(Label('totalVolume'), 3, 0)
         grid.addWidget(self.spinVolume, 3, 1)
-        grid.addWidget(Label(u'开平'), 4, 0)
+        grid.addWidget(Label('offset'), 4, 0)
         grid.addWidget(self.comboOffset, 4, 1)
-        grid.addWidget(Label(u'超价'), 5, 0)
+        grid.addWidget(Label('priceAdd'), 5, 0)
         grid.addWidget(self.spinPriceAdd, 5, 1)        
         
         return grid

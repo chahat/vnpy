@@ -1,6 +1,11 @@
 {
-	"apiKey": "",
-	"apiSecret": "",
+	"apiKey": "cebpYGkJGpDyO1YWrri6mzvH",
+	"apiSecret": "bvdcYc5ZcErIrZiv0Ds7MN17vU0BqsszP6GUBdPl4sI8bAB0",
 	"sessionCount": 3,
-	"symbols": ["XBTUSD", "EOSM18", "XRPM18"]
+	"symbols": ["XBTUSD", "EOSM18", "XRPM18"],
+	"testnet": true
+
+	RF5PwCSXIOGhO5oDVq-lAZdh
+
+					C2yfDm9JrLH0t6HurGqh1DJy84LogjbcRww9MDEwVTKJ6KqY
 }

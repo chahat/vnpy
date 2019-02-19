@@ -82,7 +82,7 @@ class IcebergAlgo(AlgoTemplate):
         
         contract = self.getContract(self.vtSymbol)
         if not contract:
-            self.writeLog(u'找不到合约%s' %self.vtSymbol)
+            self.writeLog(u'Cant find contract %s' %self.vtSymbol)
             return
         
         if not self.vtOrderID:
@@ -171,26 +171,26 @@ class IcebergWidget(AlgoWidget):
         self.comboOffset.addItems(['', OFFSET_OPEN, OFFSET_CLOSE])
         self.comboOffset.setCurrentIndex(0)
         
-        buttonStart = QtWidgets.QPushButton(u'启动')
+        buttonStart = QtWidgets.QPushButton(u'Start')
         buttonStart.clicked.connect(self.addAlgo)
         buttonStart.setMinimumHeight(100)
         
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineVtSymbol, 0, 1)
-        grid.addWidget(Label(u'方向'), 1, 0)
+        grid.addWidget(Label('direction'), 1, 0)
         grid.addWidget(self.comboDirection, 1, 1)
-        grid.addWidget(Label(u'价格'), 2, 0)
+        grid.addWidget(Label('price'), 2, 0)
         grid.addWidget(self.linePrice, 2, 1)
-        grid.addWidget(Label(u'数量'), 3, 0)
+        grid.addWidget(Label('volume'), 3, 0)
         grid.addWidget(self.lineVolume, 3, 1)
-        grid.addWidget(Label(u'挂出数量'), 4, 0)
+        grid.addWidget(Label('display'), 4, 0)
         grid.addWidget(self.lineDisplay, 4, 1)     
-        grid.addWidget(Label(u'运行间隔'), 5, 0)
+        grid.addWidget(Label('interval'), 5, 0)
         grid.addWidget(self.lineInterval, 5, 1)     
-        grid.addWidget(Label(u'开平'), 6, 0)
+        grid.addWidget(Label('offset'), 6, 0)
         grid.addWidget(self.comboOffset, 6, 1)
         
         return grid

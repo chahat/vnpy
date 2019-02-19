@@ -386,9 +386,9 @@ class VtContractData(VtBaseData):
         """Constructor"""
         super(VtContractData, self).__init__()
         
-        self.symbol = EMPTY_STRING              # 代码
+        self.symbol = EMPTY_STRING              # Code
         self.exchange = EMPTY_STRING            # 交易所代码
-        self.vtSymbol = EMPTY_STRING            # 合约在vt系统中的唯一代码，通常是 合约代码.交易所代码
+        self.vtSymbol = EMPTY_STRING            # The unique code of the contract in the vt system, usually the contract code. The exchange code
         self.name = EMPTY_UNICODE               # 合约中文名
         
         self.productClass = EMPTY_UNICODE       # 合约类型
@@ -396,9 +396,9 @@ class VtContractData(VtBaseData):
         self.priceTick = EMPTY_FLOAT            # 合约最小价格TICK
         
         # 期权相关
-        self.strikePrice = EMPTY_FLOAT          # 期权行权价
-        self.underlyingSymbol = EMPTY_STRING    # 标的物合约代码
-        self.optionType = EMPTY_UNICODE         # 期权类型
+        self.strikePrice = EMPTY_FLOAT          # Option exercise price
+        self.underlyingSymbol = EMPTY_STRING    # Subject contract code
+        self.optionType = EMPTY_UNICODE         # Option type
         self.expiryDate = EMPTY_STRING          # 到期日
         
     #----------------------------------------------------------------------

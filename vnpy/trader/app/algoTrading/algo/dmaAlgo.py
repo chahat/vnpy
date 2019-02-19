@@ -19,9 +19,9 @@ STATUS_FINISHED = set([STATUS_ALLTRADED, STATUS_CANCELLED, STATUS_REJECTED])
 
 ########################################################################
 class DmaAlgo(AlgoTemplate):
-    """DMA算法，直接发出限价或者市价委托"""
+    """DMA Algorithm, directly issue a limit price or market price"""
     
-    templateName = u'DMA 直接委托'
+    templateName = 'DMA'
 
     #----------------------------------------------------------------------
     def __init__(self, engine, setting, algoName):
@@ -84,17 +84,16 @@ class DmaAlgo(AlgoTemplate):
     #----------------------------------------------------------------------
     def onStop(self):
         """"""
-        self.writeLog(u'停止算法')
+        self.writeLog(u'StopAlgorithm')
         self.varEvent()
         
     #----------------------------------------------------------------------
     def varEvent(self):
         """更新变量"""
         d = OrderedDict()
-        d[u'算法状态'] = self.active
-        d[u'委托号'] = self.vtOrderID
-        d[u'成交数量'] = self.tradedVolume
-        d[u'委托状态'] = self.orderStatus
+        d['vtOrderID'] = self.vtOrderID
+        d['tradedVolume'] = self.tradedVolume
+        d['orderStatus'] = self.orderStatus
         d['active'] = self.active
         self.putVarEvent(d)
     
@@ -102,12 +101,12 @@ class DmaAlgo(AlgoTemplate):
     def paramEvent(self):
         """更新参数"""
         d = OrderedDict()
-        d[u'代码'] = self.vtSymbol
-        d[u'方向'] = self.direction
-        d[u'价格'] = self.price
-        d[u'数量'] = self.totalVolume
-        d[u'价格类型'] = self.priceType
-        d[u'开平'] = self.offset
+        d['vtSymbol'] = self.vtSymbol
+        d['direction'] = self.direction
+        d['price'] = self.price
+        d['totalVolume'] = self.totalVolume
+        d['priceType'] = self.priceType
+        d['offset'] = self.offset
         self.putParamEvent(d)
 
 
@@ -150,24 +149,24 @@ class DmaWidget(AlgoWidget):
         self.comboOffset.addItems(['', OFFSET_OPEN, OFFSET_CLOSE])
         self.comboOffset.setCurrentIndex(0)
         
-        buttonStart = QtWidgets.QPushButton(u'启动')
+        buttonStart = QtWidgets.QPushButton(u'Start')
         buttonStart.clicked.connect(self.addAlgo)
         buttonStart.setMinimumHeight(100)
         
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineSymbol, 0, 1)
-        grid.addWidget(Label(u'方向'), 1, 0)
+        grid.addWidget(Label('direction'), 1, 0)
         grid.addWidget(self.comboDirection, 1, 1)
-        grid.addWidget(Label(u'价格'), 2, 0)
+        grid.addWidget(Label('price'), 2, 0)
         grid.addWidget(self.spinPrice, 2, 1)
-        grid.addWidget(Label(u'数量'), 3, 0)
+        grid.addWidget(Label('totalVolume'), 3, 0)
         grid.addWidget(self.spinVolume, 3, 1)
-        grid.addWidget(Label(u'类型'), 4, 0)
+        grid.addWidget(Label('priceType'), 4, 0)
         grid.addWidget(self.comboPriceType, 4, 1)
-        grid.addWidget(Label(u'开平'), 5, 0)
+        grid.addWidget(Label('offset'), 5, 0)
         grid.addWidget(self.comboOffset, 5, 1)
         
         return grid

@@ -32,17 +32,17 @@ if __name__ == '__main__':
     tc.start()
 
     setting = {
-        'templateName': u'BestLimit 最优限价',
-        'vtSymbol': 'rb1810.SHFE',
-        'volume': 10,
+        'templateName': 'BestLimit',
+        'vtSymbol': 'XBTUSD',
+        'volume': 1,
         'direction': DIRECTION_LONG,
         'offset': OFFSET_OPEN
     }
     algoName = tc.addAlgo(setting)
-    print(u'启动算法，实例名', algoName)
+    print(u'StartAlgorithmInstanceName', algoName)
     
     sleep(5)
     tc.stopAlgo(algoName)
-    print(u'停止算法')
+    print(u'StopAlgorithm')
     
     input()

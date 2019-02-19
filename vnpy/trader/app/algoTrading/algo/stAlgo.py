@@ -143,13 +143,13 @@ class StWidget(AlgoWidget):
         Label = QtWidgets.QLabel
         
         grid = QtWidgets.QGridLayout()
-        grid.addWidget(Label(u'代码'), 0, 0)
+        grid.addWidget(Label('vtSymbol'), 0, 0)
         grid.addWidget(self.lineSymbol, 0, 1)
-        grid.addWidget(Label(u'单次刷单量'), 1, 0)
+        grid.addWidget(Label('orderVolume'), 1, 0)
         grid.addWidget(self.spinVolume, 1, 1)
-        grid.addWidget(Label(u'执行间隔'), 2, 0)
+        grid.addWidget(Label('interval'), 2, 0)
         grid.addWidget(self.spinInterval, 2, 1)
-        grid.addWidget(Label(u'最小价差Tick'), 3, 0)
+        grid.addWidget(Label('minTickSpread'), 3, 0)
         grid.addWidget(self.spinMinTickSpread, 3, 1)
         
         return grid

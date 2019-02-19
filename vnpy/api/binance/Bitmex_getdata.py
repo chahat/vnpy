@@ -1,19 +1,22 @@
 from __future__ import absolute_import
+import hashlib
+import hmac
 from time import sleep
 from urllib import urlencode
 import requests
 import traceback
 from vnpy.trader.vtObject import VtBarData
+from time import time
 
-import logging
+# import logging
 # try:
 #     import http.client as http_client
 # except ImportError:
 #     # Python 2
 #     import httplib as http_client
 # http_client.HTTPConnection.debuglevel = 1
-
-# You must initialize logging, otherwise you'll not see debug output.
+#
+# # You must initialize logging, otherwise you'll not see debug output.
 # logging.basicConfig()
 # logging.getLogger().setLevel(logging.DEBUG)
 # requests_log = logging.getLogger("requests.packages.urllib3")
@@ -42,6 +45,19 @@ mc = MongoClient(MONGO_HOST, MONGO_PORT)
 db = mc[MINUTE_DB_NAME]
 
 
+def generateSignature(apiSecret, method, path, expires, params=None, body=None):
+    if params:
+        query = urlencode(params.items())
+        path = path + '?' + query
+
+    if body is None:
+        body = ''
+
+    msg = method + '/api/v1' + path + str(expires) + body
+    signature = hmac.new(apiSecret, msg,
+                         digestmod=hashlib.sha256).hexdigest()
+    return signature
+
 def queryKlines(symbol, granularity, start):
     """"""
     path = 'https://www.bitmex.com/api/v1/trade/bucketed'
@@ -52,7 +68,14 @@ def queryKlines(symbol, granularity, start):
     }
 
     try:
-        resp = requests.get(path, params = params)
+        expires = int(time() + 5)
+
+        header = {}
+        header['api-expires'] = str(expires)
+        header['api-key'] = 'RF5PwCSXIOGhO5oDVq-lAZdh'
+        header['api-signature'] = generateSignature('C2yfDm9JrLH0t6HurGqh1DJy84LogjbcRww9MDEwVTKJ6KqY', 'GET', '/trade/bucketed', expires, params)
+
+        resp = requests.get(path, params = params, headers= header)
         print('query start %s', start)
         if resp.status_code == 200:
             return True, resp.json()
@@ -84,7 +107,7 @@ if __name__ == '__main__':
 
 
     while(startDt < endDt):
-        success, val = queryKlines(l[2]+l[-1], '5m', startDt.strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
+        success, val = queryKlines(l[2]+l[-1], '1m', startDt.strftime('%Y-%m-%dT%H:%M:%S.%fZ'))
         if success:
             lastClose = None
             for d in val:
@@ -108,11 +131,12 @@ if __name__ == '__main__':
                 cl.replace_one(flt, d, True)
             if lastClose:
                 startDt = lastClose
+                sleep(0.5)
             else:
                 print('lastClose did not change.')
                 exit()
         else:
-            if val['code'] is 429:
+            if val['code'] is 429 or 403:
                 print('code %s msg %s'% (val['code'], val['msg']))
                 sleep(1)
             if val['code'] is 418:

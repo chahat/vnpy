@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 """
-这里的Demo是一个最简单的双均线策略实现
+The Demo here is one of the simplest two-average strategy implementations.
 """
 
 from __future__ import division
@@ -58,15 +58,15 @@ class DoubleMaStrategy(CtaTemplate):
         self.bg = BarGenerator(self.onBar)
         self.am = ArrayManager()
         
-        # 注意策略类中的可变对象属性（通常是list和dict等），在策略初始化时需要重新创建，
-        # 否则会出现多个策略实例之间数据共享的情况，有可能导致潜在的策略逻辑错误风险，
-        # 策略类中的这些可变对象属性可以选择不写，全都放在__init__下面，写主要是为了阅读
-        # 策略时方便（更多是个编程习惯的选择）
+        # Note that the variable object properties (usually list and dict, etc.) in the policy class need to be recreated when the policy is initialized.
+        # Otherwise, data sharing between multiple policy instances may occur, which may lead to potential policy logic error risks.
+        # The variable object properties in the policy class can be selected and not written, all placed under __init__, mainly for reading
+        #Strategy is convenient (more is a choice of programming habits)
         
     #----------------------------------------------------------------------
     def onInit(self):
         """初始化策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'双EMA演示策略初始化')
+        self.writeCtaLog(u'Dual EMA presentation strategy initialization')
         
         initData = self.loadBar(self.initDays)
         for bar in initData:
@@ -77,13 +77,13 @@ class DoubleMaStrategy(CtaTemplate):
     #----------------------------------------------------------------------
     def onStart(self):
         """启动策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'双EMA演示策略启动')
+        self.writeCtaLog(u'Dual EMA demo strategy launch')
         self.putEvent()
     
     #----------------------------------------------------------------------
     def onStop(self):
         """停止策略（必须由用户继承实现）"""
-        self.writeCtaLog(u'双EMA演示策略停止')
+        self.writeCtaLog(u'Double EMA demonstration strategy stopped')
         self.putEvent()
         
     #----------------------------------------------------------------------
@@ -109,20 +109,20 @@ class DoubleMaStrategy(CtaTemplate):
         self.slowMa1 = slowMa[-2]
 
         # 判断买卖
-        crossOver = self.fastMa0>self.slowMa0 and self.fastMa1<self.slowMa1     # 金叉上穿
-        crossBelow = self.fastMa0<self.slowMa0 and self.fastMa1>self.slowMa1    # 死叉下穿
+        crossOver = self.fastMa0>self.slowMa0 and self.fastMa1<self.slowMa1     # Wear on a gold fork
+        crossBelow = self.fastMa0<self.slowMa0 and self.fastMa1>self.slowMa1    # Under the cross
         
-        # 金叉和死叉的条件是互斥
-        # 所有的委托均以K线收盘价委托（这里有一个实盘中无法成交的风险，考虑添加对模拟市价单类型的支持）
+        #金叉和死叉's condition is mutually exclusive
+        # All commissions are entrusted with the K-line closing price (there is a risk that the real-time can not be traded, consider adding support for the analog market order type)
         if crossOver:
-            # 如果金叉时手头没有持仓，则直接做多
+            # If there is no position at hand when the gold fork is in hand, do more directly.
             if self.pos == 0:
                 self.buy(bar.close, 1)
-            # 如果有空头持仓，则先平空，再做多
+            # If there is a short position, first empty, then do more
             elif self.pos < 0:
                 self.cover(bar.close, 1)
                 self.buy(bar.close, 1)
-        # 死叉和金叉相反
+        # The dead fork and the golden fork are the opposite
         elif crossBelow:
             if self.pos == 0:
                 self.short(bar.close, 1)
@@ -135,14 +135,14 @@ class DoubleMaStrategy(CtaTemplate):
         
     #----------------------------------------------------------------------
     def onOrder(self, order):
-        """收到委托变化推送（必须由用户继承实现）"""
-        # 对于无需做细粒度委托控制的策略，可以忽略onOrder
+        """ received a delegate change push (must be implemented by user inheritance) """
+        # For on strategies that do not require fine-grained delegation control, you can ignore onOrder
         pass
     
     #----------------------------------------------------------------------
     def onTrade(self, trade):
-        """收到成交推送（必须由用户继承实现）"""
-        # 对于无需做细粒度委托控制的策略，可以忽略onOrder
+        """ received a transaction push (must be implemented by the user) """
+        # For on strategies that do not require fine-grained delegation control, you can ignore onOrder
         pass
     
     #----------------------------------------------------------------------

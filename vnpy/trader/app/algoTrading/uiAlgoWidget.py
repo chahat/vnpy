@@ -25,16 +25,16 @@ class AlgoWidget(QtWidgets.QFrame):
         self.setFrameShape(self.Box)
         algoLayout = self.initAlgoLayout()
         
-        buttonStart = QtWidgets.QPushButton(u'启动算法')
+        buttonStart = QtWidgets.QPushButton(u'StartupAlgorithm')
         buttonStart.clicked.connect(self.addAlgo)
         buttonStart.setMinimumHeight(100)
         
-        buttonSave = QtWidgets.QPushButton(u'保存配置')
+        buttonSave = QtWidgets.QPushButton(u'SaveConfiguration')
         buttonSave.clicked.connect(self.saveAlgoSetting)
         buttonSave.setMinimumHeight(100)
         
         self.lineSettingName = QtWidgets.QLineEdit()
-        self.lineSettingName.setPlaceholderText(u'算法配置名称')
+        self.lineSettingName.setPlaceholderText(u'AlgorithmConfigurationName')
         
         vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(algoLayout)

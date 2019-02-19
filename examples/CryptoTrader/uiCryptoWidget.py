@@ -870,10 +870,10 @@ class TradingWidget(QtWidgets.QFrame):
 
         # LeftPart
         labelPriceType = QtWidgets.QLabel(vtText.PRICE_TYPE)
-        labelSymbol = QtWidgets.QLabel(u'VT代码')
+        labelSymbol = QtWidgets.QLabel(u'VT Code')
         labelPrice = QtWidgets.QLabel(vtText.PRICE)
-        labelVolume = QtWidgets.QLabel(u'数量')
-        labelOffset = QtWidgets.QLabel(u'开平')
+        labelVolume = QtWidgets.QLabel(u'Quantity')
+        labelOffset = QtWidgets.QLabel(u'Open/Close')
         
         self.comboPriceType = QtWidgets.QComboBox()
         self.comboPriceType.addItems(self.priceTypeList)
@@ -909,8 +909,8 @@ class TradingWidget(QtWidgets.QFrame):
         self.depthMonitor = DepthMonitor(self.mainEngine, self.eventEngine)
 
         # BillingButton
-        buttonBuy = QtWidgets.QPushButton(u'买入')
-        buttonSell = QtWidgets.QPushButton(u'卖出')
+        buttonBuy = QtWidgets.QPushButton(u'Buy')
+        buttonSell = QtWidgets.QPushButton(u'Sell')
         buttonCancelAll = QtWidgets.QPushButton(vtText.CANCEL_ALL)
         
         size = buttonBuy.sizeHint()
